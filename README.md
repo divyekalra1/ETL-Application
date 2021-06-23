@@ -1,15 +1,16 @@
 # ETL-Application
 A console based ETL Application developed for Erasmith Technologies Pvt. Ltd. 
-###Create and activate a python3 virtual enviroment
+
+## Create and activate a python3 virtual enviroment
 ``` 
     python3 -m venv env 
     source env/bin/activate
 ```
 
-###Install dependencies 
+## Install dependencies 
 ```pip install -r requirements.txt```
 
-###Run the extraction python script
+## Run the extraction python script
 ```python3 extraction.py```
 
 
