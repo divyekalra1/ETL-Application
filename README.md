@@ -2,8 +2,10 @@
 A console based ETL Application developed for Erasmith Technologies Pvt. Ltd. 
 
 ## Create and activate a python3 virtual enviroment
-```python3 -m venv env
-source env/bin/activate```
+```
+python3 -m venv env
+source env/bin/activate
+```
 
 ## Install dependencies 
 ```pip install -r requirements.txt```
