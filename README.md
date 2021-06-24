@@ -18,3 +18,5 @@ Extraction: The data has been downloaded from public platform Kaggle, the file u
 https://www.kaggle.com/mariaren/covid19-healthy-diet-dataset?select=Food_Supply_kcal_Data.csv
 
 The .csv file is then read into a Pandas data frame and an SQLAlchemy connection is used along with it to import the data into an sqlite3 database.
+
+Link to the google drive for this project : https://drive.google.com/drive/folders/1Stl16Z5i03GDCxKczD-IjtOqF5IMXsk2?usp=sharing
