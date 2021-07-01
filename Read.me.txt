@@ -1,0 +1,4 @@
+#This is the Transformation module of the ETL application. All the functions
+are run on a test file;
+#Printing statements are made wherever necessary as well as lowercase conversion 
+is also done along with email format checking
