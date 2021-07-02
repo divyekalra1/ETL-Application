@@ -49,7 +49,7 @@ if __name__ == "__main__":
         logger.exception("-Errror-")
 
     # login all users created
-    logger.info(engine.execute("SELECT * FROM users").fetchall())
+    logger.info(engine.execute("SELECT * FROM ETL-database").fetchall())
 
     # Session()= sessionmaker(bind=engine)
 
