@@ -28,7 +28,7 @@ if __name__ == "__main__":
     engine = create_engine('sqlite:///ETL-database.db', echo = True)
     sqlite_connection = engine.connect() #connection definition
     directory = Path("/home/divyekalra/Desktop/ETL-Application/extracted_files") 
-    old_path = Path()
+    old_path = Path() # Empty generator object
     while True:
         if not keyboard.is_pressed('c'):  
             time, file_path = max((f.stat().st_mtime, f) for f in directory.iterdir())
@@ -41,7 +41,7 @@ if __name__ == "__main__":
                     df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists='fail') #Importing data to an sqlite3 database
                 except ValueError as ve: # Raise ValueError if table already exists
                     print(ve)
-                old_path = file_path
+                old_path = file_path # overwrite old path with current path
         
         else:
             break
