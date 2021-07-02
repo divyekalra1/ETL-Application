@@ -11,11 +11,12 @@ source env/bin/activate
 ```pip install -r requirements.txt```
 
 ## Run the extraction python script
-```python3 extraction.py```
+```sudo python3 extraction.py```
 
 
-Extraction: The data has been downloaded from public platform Kaggle, the file used for extraction was originally formatted as .csv:
+Extraction: The data has been downloaded from public platform Kaggle, the file used for extraction was originally formatted as .csv/.xlsx:
 https://www.kaggle.com/mariaren/covid19-healthy-diet-dataset?select=Food_Supply_kcal_Data.csv
+https://www.kaggle.com/varpit94/goldman-sachs-stock-data-updated-till-1jul2021
 
 The .csv file is then read into a Pandas data frame and an SQLAlchemy connection is used along with it to import the data into an sqlite3 database.
 
