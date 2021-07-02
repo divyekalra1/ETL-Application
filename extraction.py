@@ -1,8 +1,10 @@
 import pandas as pd
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine  # , Column, Integer, String, ForeignKey
-#from sqlalchemy.orm import sessionmaker, relationship
-import logging  # for logging
+from sqlalchemy import create_engine
+from datetime import datetime
+import logging
+from pathlib import Path
+import keyboard
 
 """creating logger"""
 
@@ -24,42 +26,53 @@ logger.addHandler(file_handler)
 Base = declarative_base()
 
 
+def checkformat(file_path):
+    if file_path.suffix == '.xlsx' or file_path.suffix == '.xls':
+        frame = pd.read_excel(
+            f"extracted_files/{file_path.name}", engine='openpyxl')
+    elif file_path.suffix == '.csv':
+        frame = pd.read_csv(f"extracted_files/{file_path.name}")
+    # json file support to be added later
+    # elif file_path.suffix == '.json':
+    #     frame = pd.read_json(f"extracted_files/{file_path.name}")
+    return frame
+
+
 if __name__ == "__main__":
 
     print("Creating Database...")
-    logger.info('Creating Database')
-
-    # username:passworrd@localhost:5432 after :// before /
     engine = create_engine('sqlite:///ETL-database.db', echo=True)
     sqlite_connection = engine.connect()  # connection definition
+    directory = Path(
+        "/home/divyekalra/Desktop/ETL-Application/extracted_files")
+    old_path = Path()
+    while True:
+        if not keyboard.is_pressed('c'):
+            time, file_path = max((f.stat().st_mtime, f)
+                                  for f in directory.iterdir())
+            if not file_path == old_path:
+                global df
+                # Checking for the format of the file and reading it into a pandas dataframe
+                df = checkformat(file_path)
+                # Name for the table being created from a new data file
+                sqlite_table = f"{file_path.stem} Table"
+                try:
+                    check = engine.has_table(sqlite_table)
+                    # Importing data to an sqlite3 database
+                    df.to_sql(sqlite_table, sqlite_connection,
+                              index_label='id', if_exists='fail')
+                except ValueError as ve:  # Raise ValueError if table already exists
+                    print(ve)
+                    logger.exception("-Error-")
+                old_path = file_path
 
-    sqlite_table = "kaggle_database"  # Random name for the imported Kaggle database
-
+        else:
+            break
     Base.metadata.create_all(engine)  # Issue CREATE TABLE statement
 
-    try:
-        file_name = "Food_Supply_kcal_Data.csv"  # just name of file
-        df = pd.read_csv(file_name)  # pandas reading csv into df
-        check = engine.has_table(sqlite_table)  # checking if table exists
-        df.to_sql(sqlite_table, sqlite_connection, index_label='id',
-                  if_exists='fail')  # Importing data to an sqlite3 database
-
-    except ValueError as ve:  # Raise ValueError if table already exists
-        print(ve)
-        logger.exception("-Errror-")
-
-    # login all users created
-    logger.info(engine.execute("SELECT * FROM ETL-database").fetchall())
-
-    # Session()= sessionmaker(bind=engine)
-
-    # session = Session()
-
-    # user = session.query(User).all()
-
-    # session.close()
+    logger.info(engine.execute(".tables"))
 
     sqlite_connection.close()  # Close the connection
-    engine.dispose()  # dispose of engine
+    engine.dispose()  # dispose of the engine
     logger.info('connection closed and engine disposed')
     logger.info('Extraction completed')
