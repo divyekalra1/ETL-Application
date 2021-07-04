@@ -1,0 +1,9 @@
+column1==capsall
+column2==alllower
+column3==email
+column4==name
+
+operations-
+allcaps
+alllower
+emailname
