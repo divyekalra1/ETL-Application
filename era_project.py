@@ -2,14 +2,24 @@ import pandas as pd
 df =pd.read_csv(r"c:\Users\Asus\Desktop\test_data.csv")
 
 import re   
-regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'  
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
-def check(email):   
-  
-    if(re.search(regex,email)):   
-        return 1   
-    else:   
-        return 0
+
+def check(email):
+    if (re.search(regex, email)):
+        return 1
+    else:
+        flga = 0
+        flgb = 0
+        for i in email:
+            if (i == '@'):
+                flga = 1
+            if (i == '.' and flga == 1):
+                flgb = 1
+        if (flga == 1 and flgb == 1):
+            return 1
+        else:
+            return 0
 
 def func():
     for i in df['Ticket Assigned To In FFS']:
@@ -18,27 +28,27 @@ def func():
         else:
             print("Error while naming in incident id: \n",df.loc[df['Ticket Assigned To In FFS'] == i, 'Incident ID'])
             
-	nan_rowsa = df[df['FC Name if the ticket Assigned To'].isnull()]
+nan_rowsa = df[df['FC Name if the ticket Assigned To'].isnull()]
 	for i in nan_rowsa['Incident ID']:
-	    print("Field empty in FC Name if the ticket Assigned To with Incident ID:",i)
-	    print("\n")
+		print("Field empty in FC Name if the ticket Assigned To with Incident ID:",i)
+		print("\n")
 
 
-	nan_rowsb = df[df['Ticket Accepted/Rejected/Unattended by FC Name'].isnull()]
-	for i in nan_rowsb['Incident ID']:
-	    print("Field empty in Ticket Accepted/Rejected/Unattended by FC Name with Incident ID:",i)
-	    print("\n")
+nan_rowsb = df[df['Ticket Accepted/Rejected/Unattended by FC Name'].isnull()]
+for i in nan_rowsb['Incident ID']:
+    print("Field empty in Ticket Accepted/Rejected/Unattended by FC Name with Incident ID:",i)
+    print("\n")
 
-	nan_rowsc = df[df['RCIL staff'].isnull()]
-	for i in nan_rowsc['Incident ID']:
-	    print("Field empty in RCIL staff with Incident ID:",i)
-	    print("\n")
+nan_rowsc = df[df['RCIL staff'].isnull()]
+for i in nan_rowsc['Incident ID']:
+    print("Field empty in RCIL staff with Incident ID:",i)
+    print("\n")
 
 
 	nan_rowsd = df[df['Whether OFC is as per'].isnull()]
 	for i in nan_rowsd['Incident ID']:
-	    print("Field empty in Whether OFC is as per with Incident ID:",i)
-	    print("\n")
+    print("Field empty in Whether OFC is as per with Incident ID:",i)
+   print("\n")
 
 
 	nan_rowse = df[df['QUAD cable (affected)'].isnull()]
@@ -52,7 +62,23 @@ def func():
 	    print("\n")
 
 	df['Ticket Assigned To In FFS'] = df['Ticket Assigned To In FFS'].str.lower()
-    
+
+for i in df['PHONE NUMBERS']:
+    if(type(i) == str and len(i) == 10):
+        pass
+    elif(type(i) == int):
+        cnt = 0
+        while(i):
+            cnt = cnt +1
+            i = i/10
+            i = int(i)
+        if(cnt == 10):
+            pass
+        else:
+            print("INVALID PHONE NNUMBER in incident id: \n",df.loc[df['PHONE NUMBERS'] == i, 'Incident ID'])
+    else:
+        print("INVALID PHONE NNUMBER in incident id: \n",df.loc[df['PHONE NUMBERS'] == i, 'Incident ID'])
+
     
 
 
