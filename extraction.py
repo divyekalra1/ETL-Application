@@ -74,6 +74,7 @@ if __name__ == "__main__":
             break
 
     Base.metadata.create_all(engine)  # Issue CREATE TABLE statement
+    logger.info('table created of dimension:',df.shape)
 
     sqlite_connection.close()  # Close the connection
     engine.dispose()  # dispose of the engine
