@@ -27,6 +27,21 @@ def func():
             pass
         else:
             print("Error while naming in incident id: \n",df.loc[df['Ticket Assigned To In FFS'] == i, 'Incident ID'])
+
+
+
+def title_case(ch):                       # Converts every string type column into title case
+    df[ch] = df[ch].apply(str.title)
+
+# so the below defined function will loop through the columns and check if the elements conatined in the columns are string 
+# or not if it is string then it converts the string into proper case format by calling the abover title_case function
+       
+def string_checker():                     # converts columns headings present in the dataframe to a list of columns
+    li = df.columns.tolist()           
+    for i in li:
+        if type(df.loc[0,i]) == str and df.loc[0,i].find('@') == -1: # checking if the element in the first row is string or not
+            title_case(i)                                            #  if yes calls the title_case function that converts every
+                                                                     # string type column into title case
             
 nan_rowsa = df[df['FC Name if the ticket Assigned To'].isnull()]
 	for i in nan_rowsa['Incident ID']:
@@ -45,23 +60,25 @@ for i in nan_rowsc['Incident ID']:
     print("\n")
 
 
-	nan_rowsd = df[df['Whether OFC is as per'].isnull()]
-	for i in nan_rowsd['Incident ID']:
-    print("Field empty in Whether OFC is as per with Incident ID:",i)
-   print("\n")
+nan_rowsd = df[df['Whether OFC is as per'].isnull()]
+for i in nan_rowsd['Incident ID']:
+    	print("Field empty in Whether OFC is as per with Incident ID:",i)
+   	print("\n")
 
 
-	nan_rowse = df[df['QUAD cable (affected)'].isnull()]
-	for i in nan_rowse['Incident ID']:
-	    print("Field empty in QUAD cable (affected) with Incident ID:",i)
-	    print("\n")
+nan_rowse = df[df['QUAD cable (affected)'].isnull()]
+for i in nan_rowse['Incident ID']:
+	print("Field empty in QUAD cable (affected) with Incident ID:",i)
+	print("\n")
+	
+	 	    
+nan_rowsf = df[df['Lat/long of the fault location'].isnull()]
+for i in nan_rowsf['Incident ID']:
+	print("Field empty inLat/long of the fault location with Incident ID:",i)
+	print("\n")
+
 	    
-	nan_rowsf = df[df['Lat/long of the fault location'].isnull()]
-	for i in nan_rowsf['Incident ID']:
-	    print("Field empty inLat/long of the fault location with Incident ID:",i)
-	    print("\n")
-
-	df['Ticket Assigned To In FFS'] = df['Ticket Assigned To In FFS'].str.lower()
+df['Ticket Assigned To In FFS'] = df['Ticket Assigned To In FFS'].str.lower()
 
 for i in df['PHONE NUMBERS']:
     if(type(i) == str and len(i) == 10):
@@ -80,8 +97,8 @@ for i in df['PHONE NUMBERS']:
         print("INVALID PHONE NNUMBER in incident id: \n",df.loc[df['PHONE NUMBERS'] == i, 'Incident ID'])
 
     
-
-
+df = df.fillna(value = 'NULL')            # Every NaN value is converted to string type NULL
+string_checker()                          # calling the string checker function to convert the string into title case
 
 
 if __name__ == "__main__":
@@ -89,5 +106,5 @@ if __name__ == "__main__":
         for i in df['Email']:
             if(check(i) == 0):
                 print("INVALID EMAIL!")
-    func();
+    func()
     
