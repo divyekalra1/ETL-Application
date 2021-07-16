@@ -1,22 +1,24 @@
 import pandas as pd
-df =pd.read_csv(r"c:\Users\Asus\Desktop\test_data.csv")
+df =pd.read_csv(r"c:\Users\Asus\Desktop\test_data.csv")    # The read_csv() function will convert the exisiting csv database into pandas dataframe
+
+# pandas library is used here as it converts the csv file into pandas dataframe upon which various filters can be applied using pre-defined pandas function
 
 import re   
-regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'       # This regex is used to define a general format for checking the validity of emails present in the dataframe
 
 
-def check(email):
+def check(email):                                          # using above regex to check if the email is valid or not if valid this function will return 1 if invalid it returns 0
     if (re.search(regex, email)):
         return 1
     else:
         flga = 0
         flgb = 0
         for i in email:
-            if (i == '@'):
+            if (i == '@'):                                 # Checkinhg if email has '@ or not if yes flga is set to be 1
                 flga = 1
-            if (i == '.' and flga == 1):
+            if (i == '.' and flga == 1):                   # further it needs to be checked that along with @ the email should contain '.' as well
                 flgb = 1
-        if (flga == 1 and flgb == 1):
+        if (flga == 1 and flgb == 1):                      # if both the conditions are met the function returns 1
             return 1
         else:
             return 0
