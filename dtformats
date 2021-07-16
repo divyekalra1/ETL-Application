@@ -1,0 +1,35 @@
+dd-mmm-yy
+dd-mmm-yyyy
+mm/dd/yy
+mm/dd/yyyy
+dd.mm.yy
+dd.mm.yyyy
+yyyy/mm/dd
+
+ -NOT-
+yyddd
+yyyyddd
+yy/mm/dd
+mmm yy
+mmm yyyy
+ww WK yy
+ww WK yyyy
+MONTHw
+ -NOT-
+
+TIME
+
+hh:mm
+hh:mm:ss.s
+hh:mm:ss
+mm:ss
+mm:ss.s
+
+ddd hh:mm
+ddd hh:mm:ss
+dd-mmm-yyyy hh:mm
+dd-mmm-yyyy hh:mm:ss.s
+dd-mmm-yyyy hh:mm:ss
+yyyy-mm-dd hh:mm
+yyyy-mm-dd hh:mm:ss
+yyyy-mm-dd hh:mm:ss.s
