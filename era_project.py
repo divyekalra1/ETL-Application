@@ -46,20 +46,20 @@ def string_checker():                     # converts columns headings present in
                                                                      # string type column into title case
             
 nan_rowsa = df[df['FC Name if the ticket Assigned To'].isnull()]
-	for i in nan_rowsa['Incident ID']:
-		print("Field empty in FC Name if the ticket Assigned To with Incident ID:",i)
-		print("\n")
+for i in nan_rowsa['Incident ID']:
+	print("Field empty in FC Name if the ticket Assigned To with Incident ID:",i)
+	print("\n")
 
 
 nan_rowsb = df[df['Ticket Accepted/Rejected/Unattended by FC Name'].isnull()]
 for i in nan_rowsb['Incident ID']:
-    print("Field empty in Ticket Accepted/Rejected/Unattended by FC Name with Incident ID:",i)
-    print("\n")
+	print("Field empty in Ticket Accepted/Rejected/Unattended by FC Name with Incident ID:",i)
+	print("\n")
 
 nan_rowsc = df[df['RCIL staff'].isnull()]
 for i in nan_rowsc['Incident ID']:
-    print("Field empty in RCIL staff with Incident ID:",i)
-    print("\n")
+	print("Field empty in RCIL staff with Incident ID:",i)
+    	print("\n")
 
 
 nan_rowsd = df[df['Whether OFC is as per'].isnull()]
