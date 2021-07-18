@@ -51,8 +51,10 @@ def main():
                     character = input("JSON Ready?\n")
                     if character == 'Y' or character == 'y':
                         break
-
-                with open(file_path.stem+".json", 'r') as config_file:
+                script_dir = os.path.dirname(__file__)
+                rel_path = "configs/" + file_path.stem + ".json" 
+                abs_file_path = os.path.join(script_dir, rel_path)
+                with open(abs_file_path, 'r') as config_file:
                     config = json.load(config_file)
 
                 for i in range(config['num_columns']):
@@ -114,10 +116,10 @@ def createConfig(table_name, filetype, df):
             'filters': filter_choices
             })
 
-    # script_dir = os.path.dirname(__file__)
-    # rel_path = "configs/user_defined/" + config_name + ".json" 
-    # abs_file_path = os.path.join(script_dir, rel_path)
-    with open(table_name + ".json", 'a') as config_file:
+    script_dir = os.path.dirname(__file__)
+    rel_path = "configs/" + table_name + ".json" 
+    abs_file_path = os.path.join(script_dir, rel_path)
+    with open(abs_file_path , 'a') as config_file:
         config_file.write(json.dumps(config, indent = 4))
 
 
