@@ -144,13 +144,13 @@ def ft(tin,list1):
     form,form1=0
     flag,a,b,c,form=df(tin)
     if flag==1:
-        if form=1:
+        if form==1:
             for i in list1:
                 flag1,a1,b1,c1,form1=df(tin)
                 try:
                     a1int=int(a1)
                 except:
-                    priont("error format wornm for time")
+                    print("error format wornm for time")
             
             format=1
 
@@ -159,7 +159,7 @@ def ft(tin,list1):
             print('format unknown')
         for i in list1:
             #read for a to be mm or dd according to m being 1-12
-        datetime.date.strptime(a+b+c,format)
+            datetime.date.strptime(a+b+c,format)
     elif flag==2:
         if 
         datetime.date.strptime(a+b+c, format)

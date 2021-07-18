@@ -7,7 +7,7 @@ def title_case(columns):
         
         
         
- def upper_case(columns):
+def upper_case(columns):
     n = 0
     for i in df[columns]:
         if type(i) == str:
