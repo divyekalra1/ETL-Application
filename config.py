@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import pandas as pd
 
 config = {}
 
@@ -40,74 +41,35 @@ def main():
 
 
 
-def createConfig():
+def createConfig(table_name, datatype, df):
 	'''
-	creates config file taking input from user and stores it in configs/user_defined/ using the filename specified by the user
-	asks user for the following
-	- Config File name
-	- DataBase Name (file name of csv) 
-	- filepath to listen for when dump files come (optional)
-	- database type (implementing csv currently)
-	- number of columns
-	- Column Info for each column (Name of Column and filters to apply (comma separated function names))
+	creates config file using the parameters passed, table name, filetype, and the pandas dataframe df and stores it as config.json
+	the user will have to manually edit config.json with the appropriate filters
 	'''
 	
 	print("\n\n\t\t\t\t\t----------CONFIG CREATOR----------\n")
+
+	config['table_name'] = table_name
+
+	config["filetype"] = filetype
 	
-	config_name = input("Enter name of this config\n")
-	config["config_name"] = config_name
-
-	config['db_name'] = input("Enter name of the Database\n")
-
-	filename = input("Enter filepath for folder to listen to (enter \"default\" for default filepath = pwd -> dumps/)\n")
-	if(filename == 'default'):
-		script_dir = os.path.dirname(__file__)
-		rel_path = "dump/" + config_name
-		abs_file_path = os.path.join(script_dir, rel_path)
-		config['infile_directory'] = abs_file_path
-	else:
-		config['infile_directory'] = filename
-
-	config["filetype"] = "csv"
-	filetype_num = input("What type of database is it intended to go to?\n" \
-						"1) csv/xls file (current behavior)\n" \
-						"2) MySQL\n" \
-						"3) Apache\n" \
-						"(enter a number)\n")
-	if(filetype_num == 2):
-		filetype = "MySQL"
-	elif(filetype_num == 3):
-		filetype = "Apache"
-
-	num_columns = int(input("Enter Number of Columns in this File\n"))
-	config['num_columns'] = num_columns
+	config['num_columns'] = len(df.columns)
 
 	config['columns'] = [] 
-	for i in range(1,num_columns+1):
-		
-		col_name = input(f"Enter a name for Column {i}\n")
+	for i in range(len(num_columns)):
+		col_name = df.column[i]
 
-		filter_list = ["checkNull", "checkAllCaps", "checkAllLower", "checkProperCase", "checkEmail", "checkDateTime", "checkNChars"]
-		num_filters = len(filter_list)
-		print("List of all Available Filters:")
-		for i in range(num_filters):
-			print(f"{i+1}) {filter_list[i]}")
-		print("0) Continue from this Menu")
-
-		filter_choices = input("Enter all filters too apply separated by commas (e.g. \"checkNull,checkEmail,checkNChars\")\n")
-		# filter_index -= 1
-		# filter_choices_list = [filter_list[filter_index]]
-		# filter_choices.append(filter_list[filter_index])
+		filter_choices = ""
 
 		config['columns'].append({
 			'name': col_name,
 			'filters': filter_choices
 			})
 
-	script_dir = os.path.dirname(__file__)
-	rel_path = "configs/user_defined/" + config_name + ".json" 
-	abs_file_path = os.path.join(script_dir, rel_path)
-	with open(abs_file_path, 'w') as config_file:
+	# script_dir = os.path.dirname(__file__)
+	# rel_path = "configs/user_defined/" + config_name + ".json" 
+	# abs_file_path = os.path.join(script_dir, rel_path)
+	with open(config.json, 'a') as config_file:
 		config_file.write(json.dumps(config, indent = 4))
 
 def selectConfig():
