@@ -14,7 +14,7 @@ def check(email):                                          # using above regex t
         flga = 0
         flgb = 0
         for i in email:
-            if (i == '@'):                                 # Checkinhg if email has '@ or not if yes flga is set to be 1
+            if (i == '@'):                                 # Checking if email has '@ or not if yes flga is set to be 1
                 flga = 1
             if (i == '.' and flga == 1):                   # further it needs to be checked that along with @ the email should contain '.' as well
                 flgb = 1

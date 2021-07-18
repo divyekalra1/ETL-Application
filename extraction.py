@@ -10,7 +10,7 @@ import os
     A pandas dataframe is used to import data from a csv file downloaded from kaggle to an sqlite3 database file present in the same 
     directory
 ''' 
-
+config = {}
 
 def main():
     print("Creating Database...")
@@ -30,7 +30,22 @@ def main():
                 # call config and append to config.json with default values and column names etc taking from the new dataframe
                 sqlite_table = f"{file_path.stem} Table" #Name for the table being created from a new data file  
                 #call config (file_path.stem, file_path.suffix, df)
+                createConfig(file_path.stem, file_path.suffix, df)
+                while (1):
+                    character = input("JSON Ready?\n")
+                    if character == 'Y' or character == 'y':
+                        break
 
+                with open("config.json", 'r') as config_file:
+                    config = json.load(config_file)
+
+                for i in range(config['num_columns']):
+                    filter_list = config['columns'][i]['filters'].split(',')
+                    for str in filter_list:
+                        filterSelect(str, config['column'][i]['name'])
+
+
+                # LOADING
                 try:
                     check = engine.has_table(sqlite_table)
                     df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists='fail') #Importing data to an sqlite3 database
@@ -57,7 +72,7 @@ def checkformat(file_path):
     #     frame = pd.read_json(f"extracted_files/{file_path.name}")
     return frame
     
-def createConfig(table_name, datatype, df):
+def createConfig(table_name, filetype, df):
     '''
     creates config file using the parameters passed, table name, filetype, and the pandas dataframe df and stores it as config.json
     the user will have to manually edit config.json with the appropriate filters
