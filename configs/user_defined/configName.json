@@ -1,0 +1,17 @@
+{
+    "config_name": "ConfigName",
+    "db_name": "exampleDatabase",
+    "infile_directory": "dump/ConfigName",
+    "filetype": "csv",
+    "num_columns": 2,
+    "columns": [
+        {
+            "name": "Fullname",
+            "filters": "checkNull,checkProperCase"
+        },
+        {
+            "name": "Email",
+            "filters": "checkEmail"
+        }
+    ]
+}
