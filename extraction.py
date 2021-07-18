@@ -43,7 +43,8 @@ def main():
                 for i in range(config['num_columns']):
                     filter_list = config['columns'][i]['filters'].split(',')
                     for str in filter_list:
-                        filterSelect(str, config['column'][i]['name'], df)
+                        str = str.strip()
+                        filterSelect(str, config['column'][i]['name'])
 
 
                 # LOADING
@@ -105,7 +106,7 @@ def createConfig(table_name, filetype, df):
         config_file.write(json.dumps(config, indent = 4))
 
 
-def filterSelect(func_name, column_name, df):
+def filterSelect(func_name, column_name):
     '''
     Calls the function who's name is passed in the parameter as a string
     '''
@@ -120,7 +121,7 @@ def filterSelect(func_name, column_name, df):
     elif (func_name == "checkEmail"):
         checkEmail(column_name)
     elif (func_name == "checkDateTime"):           #done
-        checkDateTime(column_name, df)
+        checkDateTime(column_name)
 
     
 
@@ -185,7 +186,7 @@ def checkProperCase(column_name):
 
 
 
-def checkDateTime(column_name, df):
+def checkDateTime(column_name):
     
     dt = ""
     dd = ""
