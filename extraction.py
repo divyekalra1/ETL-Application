@@ -94,13 +94,13 @@ def createConfig(table_name, filetype, df):
     '''
     
     #check if same file exists
-    filepath = os.getcwd()
-    files = os.listdir(filepath)
-    #print(files)
-
-    if table_name in files:
-        print("YAY")
-        return 1
+    script_dir = os.path.dirname(__file__)
+    directory = Path(script_dir + "configs") 
+    str = table_name + ".json"
+    for f in directory.iterdir():
+        if  str == f.name:
+            print("YAYA")
+            return 1
 
     print("\n\n\t\t\t\t\t----------CONFIG CREATOR----------\n")
 
