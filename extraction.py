@@ -27,8 +27,6 @@ logger.addHandler(file_handler)
 
 def main():
    
-    
-
     Base = declarative_base() 
     print("Creating Database...")
     engine = create_engine('sqlite:///ETL-database.db', echo = True)
@@ -95,6 +93,15 @@ def createConfig(table_name, filetype, df):
     the user will have to manually edit config.json with the appropriate filters
     '''
     
+    #check if same file exists
+    filepath = os.getcwd()
+    files = os.listdir(filepath)
+    #print(files)
+
+    if table_name in files:
+        print("YAY")
+        return 1
+
     print("\n\n\t\t\t\t\t----------CONFIG CREATOR----------\n")
 
     config['table_name'] = table_name
