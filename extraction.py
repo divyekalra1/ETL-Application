@@ -13,6 +13,7 @@ import os
     
 
 
+
 Base = declarative_base() 
 def checkformat(file_path):
     if file_path.suffix == '.xlsx' or file_path.suffix == '.xls':
@@ -44,6 +45,7 @@ if __name__ == "__main__":
                 # call config and append to config.json with default values and column names etc taking from the new dataframe
                 sqlite_table = f"{file_path.stem} Table" #Name for the table being created from a new data file  
                 #call config (file_path.stem, file_path.suffix, df)
+
                 try:
                     check = engine.has_table(sqlite_table)
                     df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists='fail') #Importing data to an sqlite3 database
