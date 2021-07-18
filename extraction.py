@@ -6,21 +6,36 @@ from datetime import datetime
 from pathlib import Path
 import keyboard
 import os
+import json
+import logging
+
 #import vippultime as vippul
 ''' 
     A pandas dataframe is used to import data from a csv file downloaded from kaggle to an sqlite3 database file present in the same 
     directory
 ''' 
 config = {}
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
+
+file_handler = logging.FileHandler("extraction.log")
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 def main():
+   
+    
+
     Base = declarative_base() 
     print("Creating Database...")
     engine = create_engine('sqlite:///ETL-database.db', echo = True)
     sqlite_connection = engine.connect() #connection definition
 
-    #directory = Path("/home/divyekalra/Desktop/ETL-Application/extracted_files") 
-    directory = os.getcwd() + "\\extracted_files"
+    directory = Path("/home/divyekalra/Desktop/ETL-Application/extracted_files") 
+    # directory = os.getcwd() + "\\extracted_files"
     old_path = Path() # Empty generator object
     while True:
         if not keyboard.is_pressed('c'):  
@@ -29,7 +44,7 @@ def main():
                 global df
                 print(file_path.suffix)
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
-                sqlite_table = f"{file_path.stem} Table" #Name for the table being created from a new data file  
+                sqlite_table = f"{file_path.stem}" #Name for the table being created from a new data file  
 
                 createConfig(file_path.stem, file_path.suffix, df)
                 while (1):
@@ -44,7 +59,7 @@ def main():
                     filter_list = config['columns'][i]['filters'].split(',')
                     for str in filter_list:
                         str = str.strip()
-                        filterSelect(str, config['column'][i]['name'])
+                        filterSelect(str, config['columns'][i]['name'])
 
 
                 # LOADING
@@ -87,9 +102,10 @@ def createConfig(table_name, filetype, df):
     
     config['num_columns'] = len(df.columns)
 
-    config['columns'] = [] 
-    for i in range(len(num_columns)):
-        col_name = df.column[i]
+    config['columns'] = []
+    list = df.columns.tolist() 
+    for i in range(config["num_columns"]):
+        col_name = list[i]
 
         filter_choices = ""
 
@@ -101,7 +117,7 @@ def createConfig(table_name, filetype, df):
     # script_dir = os.path.dirname(__file__)
     # rel_path = "configs/user_defined/" + config_name + ".json" 
     # abs_file_path = os.path.join(script_dir, rel_path)
-    with open(config.json, 'a') as config_file:
+    with open("config.json", 'a') as config_file:
         config_file.write(json.dumps(config, indent = 4))
 
 
@@ -111,9 +127,9 @@ def filterSelect(func_name, column_name):
     '''
     if(func_name == "checkNull"):           #done
         checkNull(column_name)
-    elif (func_name == "checkAllCaps"):
+    elif (func_name == "checkUpper"):
         checkUpper(column_name)
-    elif (func_name == "checkAllLower"):
+    elif (func_name == "checkLower"):
         checkLower(column_name)
     elif (func_name == "checkProperCase"):            #done
         checkProperCase(column_name)
@@ -138,7 +154,9 @@ def checkNull(column_name):
         num = 0                                
         for i in li:
             if i == True:
-                df.drop(index = num, inplace = True)
+                # df.drop(index = num, inplace = True)
+                logger.info("Error on line " + f"{num+1}\n" + f"{df.iloc[num]}")
+
 #                 logging.warning(df.iloc[num])
                 # LOG THIS INTO .LOG FIlE INSTEAD OF DROPPING
             num = num + 1
@@ -162,7 +180,7 @@ def checkNull(column_name):
 #         vippul.ddf(dd, df[column_name])
 #         vippul.ft(dt, df[column_name])
 
-def checkProperCase(column_name):
+def checkProperCase(column_name): #W
     num = 0
     for i in df[column_name]:
         if type(i) == str:
@@ -176,7 +194,7 @@ def checkUpper(column_name):
             df.loc[n,column_name] = df.loc[n,column_name].upper()
         n = n + 1  
         
-def stripSpaces(column_name):
+def stripSpaces(column_name): #W
     n = 0
     for i in df[column_name]:
         if type(i) == str:
