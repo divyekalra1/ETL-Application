@@ -99,7 +99,7 @@ def ddf(din,list1):
             elif a1.len()==4:
                 formatr='%Y' + form + "%m" +form+ "%d"
             else:
-                print('format unknown')
+                print('format unknown or mixed format')
         datetime.date.strptime(a+b+c,format)
     elif a.isdigit() and c.isdigit():
         if c.len()==4:
@@ -132,13 +132,11 @@ def df(tin):
             d=d+str(i)
         elif i==":" :
             flag+=1
-            form=1
         elif i==".":
             flag+=1
-            form=2
         else:
             print("error")       
-    return flag,a,b,c,form
+    return flag,a,b,c
 
 def ft(tin,list1):
     a,b,c,a1,b1,c1=""
@@ -149,7 +147,10 @@ def ft(tin,list1):
         if form=1:
             for i in list1:
                 flag1,a1,b1,c1,form1=df(tin)
-                if a1
+                try:
+                    a1int=int(a1)
+                except:
+                    priont("error format wornm for time")
             
             format=1
 
@@ -164,4 +165,3 @@ def ft(tin,list1):
         datetime.date.strptime(a+b+c, format)
     else:
         print('format unknown')
-        
