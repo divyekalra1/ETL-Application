@@ -34,6 +34,7 @@ if __name__ == "__main__":
             time, file_path = max((f.stat().st_mtime, f) for f in directory.iterdir())
             if not file_path == old_path:
                 global df
+                print(file_path.suffix)
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
                 sqlite_table = f"{file_path.stem} Table" #Name for the table being created from a new data file  
                 try:
