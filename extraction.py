@@ -33,9 +33,8 @@ def main():
     print("Creating Database...")
     engine = create_engine('sqlite:///ETL-database.db', echo = True)
     sqlite_connection = engine.connect() #connection definition
-
-    directory = Path("/home/divyekalra/Desktop/ETL-Application/extracted_files") 
-    # directory = os.getcwd() + "\\extracted_files"
+    script_dir = os.path.dirname(__file__)
+    directory = Path(script_dir + "extracted_files") 
     old_path = Path() # Empty generator object
     while True:
         if not keyboard.is_pressed('c'):  
@@ -54,7 +53,7 @@ def main():
                 script_dir = os.path.dirname(__file__)
                 rel_path = "configs/" + file_path.stem + ".json" 
                 abs_file_path = os.path.join(script_dir, rel_path)
-                with open(abs_file_path, 'a') as config_file:
+                with open(abs_file_path, 'r') as config_file:
                     config = json.load(config_file)
 
                 for i in range(config['num_columns']):
@@ -119,7 +118,7 @@ def createConfig(table_name, filetype, df):
     script_dir = os.path.dirname(__file__)
     rel_path = "configs/" + table_name + ".json" 
     abs_file_path = os.path.join(script_dir, rel_path)
-    with open(abs_file_path , '') as config_file:
+    with open(abs_file_path , 'a') as config_file:
         config_file.write(json.dumps(config, indent = 4))
 
 
