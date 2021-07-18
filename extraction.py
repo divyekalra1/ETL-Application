@@ -52,7 +52,7 @@ def main():
                     if character == 'Y' or character == 'y':
                         break
 
-                with open("config.json", 'r') as config_file:
+                with open(file_path.stem+".json", 'r') as config_file:
                     config = json.load(config_file)
 
                 for i in range(config['num_columns']):
@@ -117,7 +117,7 @@ def createConfig(table_name, filetype, df):
     # script_dir = os.path.dirname(__file__)
     # rel_path = "configs/user_defined/" + config_name + ".json" 
     # abs_file_path = os.path.join(script_dir, rel_path)
-    with open("config.json", 'a') as config_file:
+    with open(table_name + ".json", 'a') as config_file:
         config_file.write(json.dumps(config, indent = 4))
 
 
