@@ -47,33 +47,47 @@ def main():
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
                 sqlite_table = f"{file_path.stem}" #Name for the table being created from a new data file  
 
+                # checking if config file exists and create a config file according to the datafile in case it doesn't exist
                 rewrite_choice = createConfig(file_path.stem, file_path.suffix)
+
                 if rewrite_choice == 1: # continue with existing config file
                     print("Continuing with same config file")
+                    logger.info("Continuing with an existing config file")
                 else:
                     while (1):          # waiting for user to make changes in config file
                         character = input(".json file configured ? [Y/y]  :")
                         if character == 'Y' or character == 'y':
                             break
                 
+                # loads appropriate config file corresponding to the incoming file
                 script_dir = os.path.dirname(__file__)
                 rel_path = "configs/" + file_path.stem + ".json" 
                 abs_file_path = os.path.join(script_dir, rel_path)
-                with open(abs_file_path, 'r') as config_file:
-                    config = json.load(config_file)
-                for i in range(config['num_columns']):
-                    filter_list = config['columns'][i]['filters'].split(',')
-                    for str in filter_list:
-                        str = str.strip()
-                        filterSelect(str, config['columns'][i]['name'])
+                try:
+                    with open(abs_file_path, 'r') as config_file:
+                        config = json.load(config_file)
+                except:
+                    logger.exception(f"unable to load {rel_path}")
+                    print(f"unable to load {rel_path}")
 
-                stringy = 'append'
+                # applying filters as specified in config file
+                for i in range(config['num_columns']):
+                    filter_list = config['columns'][i]['filters'].split(',')    # creates a list of filters to be applied
+                    for str in filter_list:
+                        str = str.strip()                                       # isolates filter name string, strips spaces
+                        try:
+                            filterSelect(str, config['columns'][i]['name'])
+                            logger.info(f"{str} filter applied to column \"{config['columns'][i]['name']}\"")
+                        except:
+                            logger.exception(f"{str} filter FAILED to apply to column \"{config['columns'][i]['name']}\"")
+
+                db_action_mode = 'append'
                 # LOADING
                 try:
                     check = engine.has_table(sqlite_table)
                     if config["overwrite"].lower == "true":
-                        stringy = 'replace'
-                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists=stringy) #Importing data to an sqlite3 database
+                        db_action_mode = 'replace'
+                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists=db_action_mode) #Importing data to an sqlite3 database
                 except ValueError as ve: # Raise ValueError if table already exists
                     print(ve)
                 old_path = file_path # overwrite old path with current path
@@ -98,79 +112,102 @@ def checkformat(file_path):
     
 def createConfig(table_name, filetype):
     '''
-    creates config file using the parameters passed, table name, filetype, and the pandas dataframe df and stores it as config.json
-    the user will have to manually edit config.json with the appropriate filters
-    returns 1 if doesn't want to reconfigure in case of existing config file
+    creates config file using the parameters passed, table name, and filetype, and stores the required information as config.json
+    the user can now edit config.json with the appropriate filters to apply on the columns
+    returns 1 if existing config file of the same name is found
     returns 0 otherwise
     '''
     print("Checking for existing config file")
     #check if same file exists
-    script_dir = os.path.dirname(__file__)
-    directory = Path(script_dir + "configs") 
-    str = table_name + ".json"
-    for f in directory.iterdir():
-        if  str == f.name:
-            print("Matching Config Found!")
-            return 1
-            # print("A config file for this filename already exists\nChoose an option (1 or 2)\n" \
-            #         "1) continue with existing config file\n" \
-            #         "2) overwrite existing config file and reconfigure\n")
-            # rewrite_choice = int(input("Enter Option: "))
-            # if rewrite_choice == 2: #wants to rewrite existing config file
-            #     continue
-            # elif rewrite_choice == 1:
-            #     return 1
-            # else:
-            #     return 1
+    try:
+        script_dir = os.path.dirname(__file__)
+        directory = Path(script_dir + "configs") 
+        str = table_name + ".json"
+        for f in directory.iterdir():
+            if  str == f.name:
+                print("Matching Config Found!")
+                return 1
+                # print("A config file for this filename already exists\nChoose an option (1 or 2)\n" \
+                #         "1) continue with existing config file\n" \
+                #         "2) overwrite existing config file and reconfigure\n")
+                # rewrite_choice = int(input("Enter Option: "))
+                # if rewrite_choice == 2: #wants to rewrite existing config file
+                #     continue
+                # elif rewrite_choice == 1:
+                #     return 1
+                # else:
+                #     return 1
+    except:
+        logger.exception(f"Ran into an issue when looking for an existing config file {table_name}.json")
 
-    print("\n\n\t\t\t\t\tCreating a new config file(.json)\n")
 
+    print("\n\t\t\tCreating a new config file(.json)")
+    # storing information about the database
     config['table_name'] = table_name
-
     config["filetype"] = filetype
     config["overwrite"] = "False"
     config['num_columns'] = len(df.columns)
-
+    # Storing column names as list of dictionaries
     config['columns'] = []
     list = df.columns.tolist() 
     for i in range(config["num_columns"]):
         col_name = list[i]
 
+        # leaving space to add filters
         filter_choices = ""
 
+        # adding all fields for this column 
         config['columns'].append({
             'name': col_name,
             'filters': filter_choices
             })
 
-    script_dir = os.path.dirname(__file__)
-    rel_path = "configs/" + table_name + ".json" 
-    abs_file_path = os.path.join(script_dir, rel_path)
-    with open(abs_file_path , 'w') as config_file:
-        config_file.write(json.dumps(config, indent = 4))
+    # saves the JSON file in the configs folder with the same filename as the datafile
+    try:
+        # getting filepath to open
+        script_dir = os.path.dirname(__file__)
+        rel_path = "configs/" + table_name + ".json" 
+        abs_file_path = os.path.join(script_dir, rel_path)
+
+        # opening the file
+        with open(abs_file_path , 'w') as config_file:
+            config_file.write(json.dumps(config, indent = 4))
+
+        logger.info(f" {table_name}.json config file saved inside of the configs folder. Ready to be configured with filters")
+        print(f" {table_name}.json config file saved inside of the configs folder. Ready to be configured with filters")
+    except:
+        logger.exception(f"Unable to save {table_name}.json config file in the configs folder")
+        print(f"Unable to save {table_name}.json config file in the configs folder")
+
     return 0
 
 
 def filterSelect(func_name, column_name):
     '''
-    Calls the function who's name is passed in the parameter as a string
+    Calls the function whose name is passed in the parameter as a string, and passes in column_name into that function
     '''
-    if(func_name == "checkNull"):
-        checkNull(column_name)
-    elif (func_name == "checkUpper"):
-        checkUpper(column_name)
-    elif (func_name == "checkLower"):
-        checkLower(column_name)
-    elif (func_name == "checkProperCase"):
-        checkProperCase(column_name)
-    elif (func_name == "stripSpaces"):
-        stripSpaces(column_name)
-    elif (func_name == "checkEmail"):
-        checkEmail(column_name)
-    elif (func_name == "checkDateTime"):
-        checkDateTime(column_name)
-    elif (func_name == "checkPhoneNumber"):
-        checkPhoneNumber(column_name)
+    try:
+        if(func_name == "checkNull"):
+            checkNull(column_name)
+        elif (func_name == "checkUpper"):
+            checkUpper(column_name)
+        elif (func_name == "checkLower"):
+            checkLower(column_name)
+        elif (func_name == "checkProperCase"):
+            checkProperCase(column_name)
+        elif (func_name == "stripSpaces"):
+            stripSpaces(column_name)
+        elif (func_name == "checkEmail"):
+            checkEmail(column_name)
+        elif (func_name == "checkDateTime"):
+            checkDateTime(column_name)
+        elif (func_name == "checkPhoneNumber"):
+            checkPhoneNumber(column_name)
+
+        logging.info(f"selectFilter finished calling function {func_name}")
+    except:
+        logger.exception(f"Unable to call function {func_name}")
+
 
 
 def checkNull(column_name):                  
@@ -201,7 +238,8 @@ def checkNull(column_name):
         if the column name provided is not the column heading then this part of code will be executed. It will be logged
         in a seperate logging file
         '''
-        print('Column heading specified not present in table')   
+        print('Column heading specified not present in table')  
+        logger.exception(f'Column name "{column_name}" specified not present in table') 
         # LOG THIS INTO .LOG FIlE INSTEAD OF PRINTING
 
 
