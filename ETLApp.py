@@ -180,7 +180,8 @@ def checkNull(column_name):
         '''
         
         li = df[column_name].isnull().tolist() 
-        num = 0                                
+        num = 0 
+        rows = df.shape[0]
         for i in li:
             if i == True:
                 logger.info("Error on line " + f"{num+1}\n" + f"{df.iloc[num]}")
