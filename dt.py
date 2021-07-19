@@ -93,18 +93,22 @@ def ddchecker(list1):
         a1int=int(a1)
         b1int=int(b1)
         if len(a1)==2 and flag1==2: #all int only formats with year at last
+            #if first part >12 then that is date
             if a1int>12 and len(c1)==2:
-                formatr="%m"+form+"%d"+form+"%y"
+                formatr="%d"+form+"%m"+form+"%y"
                 break
             elif a1int>12 and len(c1)==4:
-                formatr="%m"+form+"%d"+form+"%Y"
+                formatr="%d"+form+"%m"+form+"%Y"
                 break
+            #if second part >12 then that is date
             elif b1int>12 and len(c1)==2 :
                 formatr="%m"+form+"%d"+form+"%y"
                 break
             elif b1int>12 and len(c1)==4 :
                 formatr="%m"+form+"%d"+form+"%Y"
                 break
+            #if none >12 then could be anything so keeping %d/%m/%y 
+            #as default until some entry comes and if not then default
             elif a1int<=12 and len(c1)==2 :
                 formatr="%d"+form+"%m"+form+"%y"
             elif a1int<=12 and len(c1)==4 :
@@ -112,6 +116,7 @@ def ddchecker(list1):
             else:
                 print("error 1")
         elif len(a1)==4 and b1.isdigit() and len(b1)==2 and c1.isdigit() and len(c1)==2:
+            #if year in first part of 4 digits
             formatr='%Y' + form + "%m" +form+ "%d"
         else:
             print('format unknown or mixed format')
@@ -169,8 +174,9 @@ def ddf(din,list1):
                 print(formatr," on ",din) #active feedback
                 date1=datetime.strptime(din,formatr)
                 return date1
-        except e:
-            print(e)
+        except err:
+            print("not able to parse date time")
+            print(err)
             #logger.exception("not able to parse datetime")
             return None
     elif a.isdigit() and c.isdigit() and flag==2:
@@ -180,26 +186,12 @@ def ddf(din,list1):
             formatr="%d"+form+"%M"+form+"%Y"
         try:
             print(formatr," on ",a+b+c)
-            date1=datetime.strptime(a+b+c,formatr)
-            return date1
-        except:
-            #logger.exception("not able to parse datetime")
-            print('error5')
-            return None
-    elif a.isdigit() and b.isdigit() and c.isdigit() and flag==2:
-        if len(a)==4:
-            formatr="%Y"+form+"%M"+form+"%d"
-        elif len(a)==2:
-            formatr="%y"+form+"%M"+form+"%d"
-        else:
-            print('format unknown2')
-            return None
-        try:
-            print(formatr," on ",din)
             date1=datetime.strptime(din,formatr)
             return date1
         except:
+            print("not able to parse date time")
             #logger.exception("not able to parse datetime")
+            print('not able to parse into date object')
             return None
     elif  b.isdigit() and c.isdigit() and flag==2:
         if len(a)==3 and a.isalpha() and len(c)==4:
@@ -210,82 +202,81 @@ def ddf(din,list1):
             print('format unknown3')
             formatr=0
             return None
-
     else:
         print('format unknown4')
         formatr=0
         return None
 
-# def dtloop(tin):
-#     for i in tin:
-#         if i.isdigit() and flag==0:
-#             a=a+str(i)
-#         elif i.isdigit() and flag==1:
-#             b=b+str(i)
-#         elif i.isdigit() and flag==2:
-#             c=c+str(i)
-#         elif i.isdigit() and flag==3:
-#             d=d+str(i)
-#         elif i==":" :
-#             flag+=1
-#         elif i==".":
-#             flag+=1
-#         else:
-#             print("error")       
-#     return flag,a,b,c
+def dtloop(tin):
+    for i in tin:
+        if i.isdigit() and flag==0:
+            a=a+str(i)
+        elif i.isdigit() and flag==1:
+            b=b+str(i)
+        elif i.isdigit() and flag==2:
+            c=c+str(i)
+        elif i.isdigit() and flag==3:
+            d=d+str(i)
+        elif i==":":
+            flag+=1
+        elif i==".":
+            flag+=1
+        else:
+            print("error")       
+    return flag,a,b,c
 
-# def dtchecker(list1):
-#     for i in list1:
-#         flag1,a1,b1,c1,form1=df(tin)
-#         try:
-#             a1int=int(a1)
-#             if a1int<=24:
-#                 pass
-#             elif a1int>24:
-#                 count+=1
-#         except:
-#             print("error format-time")
-#     if count==0:
-#         formatr=1
-#         return formatr
-#     elif count==list1.len():
-#         formatr=2
-#         return formatr
-#     else:
-#         print("format mixed can't identify")
-#         logger.error("format mixed can't identify")
+def dtchecker(list1):
+    for i in list1:
+        flag1,a1,b1,c1=df(tin)
+        try:
+            a1int=int(a1)
+            if a1int<=24:
+                pass
+            elif a1int>24:
+                count+=1
+        except:
+            print("error format-time")
+    if count==0:
+        formatr=1
+        return formatr
+    elif count==list1.len():
+        formatr=2
+        return formatr
+    else:
+        print("format mixed can't identify")
+        logger.error("format mixed can't identify")
 
 
-# def dtf(tin,list1):
-#     if tin!=None:
-#         pass
-#     else:
-#         return 0
-#     a,b,c,a1,b1,c1=""
-#     flag,flag1=0
-#     form,form1=0
-#     flag,a,b,c,form=df(tin)
-#     if flag==1:
-#         if count==0:
-#             formatr=dtchecker(list1)
-#         if form==1:
-#             pass
-#         else:
-#             print('format unknown')
-#         #for i in list1:
-#             #read for a to be mm or dd according to m being 1-12
-#         date1=datetime.date.strptime(a+b+c,format)
-#     elif flag==2:
-#         formatr=3
-#         try:
-#             datetime.date.strptime(a+b+c,formatr)
-#         except:
-#             logger.exception("not able to parse datetime")
-#     else:
-#         print('format unknown')
+def dtf(tin,list1):
+    if tin!=None:
+        pass
+    else:
+        return 0
+    a,b,c,a1,b1,c1=""
+    flag,flag1=0
+    form,form1=0
+    flag,a,b,c,form=df(tin)
+    if flag==1:
+        if count==0:
+            formatr=dtchecker(list1)
+        if form==1:
+            pass
+        else:
+            print('format unknown')
+        #for i in list1:
+            #read for a to be mm or dd according to m being 1-12
+        date1=datetime.date.strptime(a+b+c,format)
+    elif flag==2:
+        formatr=3
+        try:
+            datetime.date.strptime(a+b+c,formatr)
+        except:
+            logger.exception("not able to parse datetime")
+    else:
+        print('format unknown')
 
 def main():
-    listi=['12/23/2021','11/12/2021','12/12/2021']
+    listi=['23/01/2021','21/12/2021','3/12/2021']
     listr=[]
     for i in listi:
         print("loop ",i)
