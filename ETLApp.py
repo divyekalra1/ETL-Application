@@ -145,7 +145,7 @@ def filterSelect(func_name, column_name):
         stripSpaces(column_name)
     #elif (func_name == "checkEmail"):
         #checkEmail(column_name)
-    elif (func_name == "checkDateTime"):           #done
+    elif (func_name == "checkDateTime"):           #give df[column name too]
         checkDateTime(column_name)
 
 
@@ -179,14 +179,35 @@ def checkNull(column_name):
         # LOG THIS INTO .LOG FIlE INSTEAD OF PRINTING
 
 
-# def checkDateTime(column_name):
+def checkDateTime(column_name, df):
     
-#     dt = ""
-#     dd = ""
-#     for row in df[column_name]:
-#         dt,dd = vippul.ddt(row)
-#         vippul.ddf(dd, df[column_name])
-#         vippul.ft(dt, df[column_name])
+    dt = ""
+    dd = ""
+    count=0
+    for row in df[column_name]:
+        
+        dt,dd = vippul.ddt(row)
+        rd,formatr=vippul.ddf(dd, df[column_name])
+        
+        if formatr==0:
+            #error printed in function the string is errored 
+            rd="error"
+            continue
+        else:
+            pass
+        
+        rt,formatr=vippul.ft(dt, df[column_name])
+        
+        if formatr==0:
+            #error printed in function the string is errored 
+            rt="error"
+            continue
+        else:
+            pass
+        
+        rdt=rd+rt
+        #add rdt to a column(it will be of datetime type)
+    #add the column to df or replace column_name
 
 def checkProperCase(column_name): #W
     num = 0
