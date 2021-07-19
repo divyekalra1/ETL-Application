@@ -15,6 +15,9 @@ import logging
     directory
 ''' 
 config = {}
+filter_names = ["checkNull", "checkUpper", "checkLower", "checkProperCase", "stripSpaces", "checkEmail", "checkDatTime", "checkPhoneNumber"]
+num_filters = len(filter_names)
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -45,7 +48,7 @@ def main():
 
                 rewrite_choice = createConfig(file_path.stem, file_path.suffix, df)
                 if rewrite_choice == 1: # continue with existing config file
-                    print("Continuing with same config file")
+                    print("Processing data according to existing config file")
                 else:
                     while (1):          # waiting for user to make changes in config file
                         character = input("JSON Ready?\n")
@@ -97,13 +100,14 @@ def createConfig(table_name, filetype, df):
     returns 1 if doesn't want to reconfigure in case of existing config file
     returns 0 otherwise
     '''
-    print("Create Config Started RUNNING")
+    print("checking for existing config file")
     #check if same file exists
     script_dir = os.path.dirname(__file__)
     directory = Path(script_dir + "configs") 
     str = table_name + ".json"
     for f in directory.iterdir():
         if  str == f.name:
+            print("Matching Config Found!")
             return 1
             # print("A config file for this filename already exists\nChoose an option (1 or 2)\n" \
             #         "1) continue with existing config file\n" \
@@ -148,20 +152,22 @@ def filterSelect(func_name, column_name):
     '''
     Calls the function who's name is passed in the parameter as a string
     '''
-    if(func_name == "checkNull"):           #done
+    if(func_name == "checkNull"):
         checkNull(column_name)
     elif (func_name == "checkUpper"):
         checkUpper(column_name)
     elif (func_name == "checkLower"):
         checkLower(column_name)
-    elif (func_name == "checkProperCase"):            #done
+    elif (func_name == "checkProperCase"):
         checkProperCase(column_name)
     elif (func_name == "stripSpaces"):
         stripSpaces(column_name)
-    #elif (func_name == "checkEmail"):
-        #checkEmail(column_name)
-    elif (func_name == "checkDateTime"):           #done
+    elif (func_name == "checkEmail"):
+        checkEmail(column_name)
+    elif (func_name == "checkDateTime"):
         checkDateTime(column_name)
+    elif (func_name == "checkPhoneNumber"):
+        checkPhoneNumber(column_name)
 
 
 def checkNull(column_name):                  
@@ -231,6 +237,42 @@ def checkLower(column_name):
         if type(i) == str:
             df.loc[n,column_name] = df.loc[n,column_name].lower()
         n = n + 1 
+
+
+def checkPhoneNumber(phone_number):   #function to check the format of phone numbers
+    for i in df[phone_number]:
+        if(type(i) == str and len(i) == 10):   #if the number is in string format in the dataframe
+            pass
+        elif(type(i) == int):
+            cnt = 0
+            while(i):                           #if the number is in integer format in the dataframe
+                cnt = cnt +1
+                i = i/10
+                i = int(i)
+            if(cnt == 10):
+                pass
+            else:
+                print("INVALID PHONE NNUMBER  \n",df.index[df[phone_number] == i])  #return if the number is invalid
+        else:
+            print("INVALID PHONE NNUMBER \n",df.index[df[phone_number] == i])
+
+
+def checkEmail(Email):                        #function to check validity of the Email
+    for i in df[Email]:
+        if (re.search(regex, i)):             #using regex to check all the known domains
+            continue
+        else:
+            flga = 0
+            flgb = 0
+            for i in df[Email]:
+                if (i == '@'):                #username should atleast have an '@'
+                    flga = 1
+                if (i == '.' and flga == 1):  #username should atleast have a '.'
+                    flgb = 1
+            if (flga == 1 and flgb == 1):
+                continue
+            else:
+                print("Invalid Email in Column Index \n ", df.index[df[Email] == i])    #return the index to the console file if the mail format is wrong
 
 
 if __name__ == "__main__":
