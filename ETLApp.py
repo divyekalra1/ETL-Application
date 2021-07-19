@@ -20,7 +20,7 @@ logger.setLevel(logging.INFO)
 
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
 
-file_handler = logging.FileHandler("extraction.log")
+file_handler = logging.FileHandler("Logged_Data.log")
 file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
@@ -32,7 +32,7 @@ def main():
     engine = create_engine('sqlite:///ETL-database.db', echo = True)
     sqlite_connection = engine.connect() #connection definition
     script_dir = os.path.dirname(__file__)
-    directory = Path(script_dir + "extracted_files") 
+    directory = Path(script_dir + "Target_Data") 
     old_path = Path() # Empty generator object
     while True:
         if not keyboard.is_pressed('c'):  
@@ -79,12 +79,12 @@ def main():
 
 def checkformat(file_path):
     if file_path.suffix == '.xlsx' or file_path.suffix == '.xls':
-        frame = pd.read_excel(f"extracted_files/{file_path.name}", engine='openpyxl')
+        frame = pd.read_excel(f"Target_Data/{file_path.name}", engine='openpyxl')
     elif file_path.suffix == '.csv':
-        frame = pd.read_csv(f"extracted_files/{file_path.name}")
+        frame = pd.read_csv(f"Target_Data/{file_path.name}")
     # json file support to be added later
     # elif file_path.suffix == '.json':
-    #     frame = pd.read_json(f"extracted_files/{file_path.name}")
+    #     frame = pd.read_json(f"Target_Data/{file_path.name}")
     return frame
     
 def createConfig(table_name, filetype, df):
@@ -162,8 +162,9 @@ def checkNull(column_name):
         num = 0                                
         for i in li:
             if i == True:
-                # df.drop(index = num, inplace = True)
                 logger.info("Error on line " + f"{num+1}\n" + f"{df.iloc[num]}")
+                # df.drop(index = num, inplace = True)
+
 
 #                 logging.warning(df.iloc[num])
                 # LOG THIS INTO .LOG FIlE INSTEAD OF DROPPING
