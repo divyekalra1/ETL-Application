@@ -8,16 +8,15 @@ import keyboard
 import os
 import json
 import logging
-import dt as doodoo
-
-
-#import doodootime as doodoo
+import dt as DATETIME
+import re   
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 ''' 
     A pandas dataframe is used to import data from a csv file downloaded from kaggle to an sqlite3 database file present in the same 
     directory
 ''' 
 config = {}
-filter_names = ["checkNull", "checkUpper", "checkLower", "checkProperCase", "stripSpaces", "checkEmail", "checkDatTime", "checkPhoneNumber"]
+filter_names = ["checkNull", "checkUpper", "checkLower", "checkProperCase", "stripSpaces", "checkEmail", "checkDateTime", "checkPhoneNumber"]
 num_filters = len(filter_names)
 
 logger = logging.getLogger(__name__)
@@ -31,10 +30,9 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 def main():
-    
-
     Base = declarative_base() 
     print("Creating Database...")
+
     engine = create_engine('sqlite:///ETL-database.db', echo = True)
     sqlite_connection = engine.connect() #connection definition
     script_dir = os.path.dirname(__file__)
@@ -69,18 +67,21 @@ def main():
                         str = str.strip()
                         filterSelect(str, config['columns'][i]['name'])
 
-
+                stringy = 'append'
                 # LOADING
                 try:
                     check = engine.has_table(sqlite_table)
-                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists='append') #Importing data to an sqlite3 database
+                    if config["overwrite"].lower == "true":
+                        stringy = 'replace'
+                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists=stringy) #Importing data to an sqlite3 database
                 except ValueError as ve: # Raise ValueError if table already exists
                     print(ve)
                 old_path = file_path # overwrite old path with current path
         else:
             break
     Base.metadata.create_all(engine) #Issue CREATE TABLE statement
-    
+    logger.info("Database Created")
+
     sqlite_connection.close() #Close the connection
     engine.dispose() #dispose of the engine
 
@@ -127,7 +128,7 @@ def createConfig(table_name, filetype):
     config['table_name'] = table_name
 
     config["filetype"] = filetype
-    
+    config["overwrite"] = "False"
     config['num_columns'] = len(df.columns)
 
     config['columns'] = []
@@ -211,18 +212,17 @@ def checkDateTime(column_name):
     dd = ""
     i=0
     for row in listi:
-        dt,dd = doodoo.ddt(row)
+        dt,dd = DATETIME.ddt(row)
         i = i + 1
         if dt=="":
             print("Loop ", i)
-            listr.append(doodoo.ddf(dd, listi))
+            listr.append(DATETIME.ddf(dd, listi))
         else:
             pass #Time function to be added 
         #error printed in function the string is errored
-    for row in listr:
+    # for row in listr:
          
-
-def checkProperCase(columns):
+def checkProperCase(column_name):
     '''
     So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
     TRY part and neglect the except part
@@ -239,8 +239,8 @@ def checkProperCase(columns):
             is string or not
             '''
 
-            if type(df.loc[i,columns]) == str:    
-                df.loc[i,columns] = df.loc[i,columns].title() 
+            if type(df.loc[i,column_name]) == str:    
+                df.loc[i,column_name] = df.loc[i,column_name].title() 
                 '''converts the element into title case'''
            
     except:
@@ -253,7 +253,7 @@ def checkProperCase(columns):
         print('Column heading specified not present in table')
 
              
-def checkUpper(columns):
+def checkUpper(column_name):
     '''
     So if the argumenet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
     TRY part and neglect the except part
@@ -270,8 +270,8 @@ def checkUpper(columns):
             is string or not
             '''
 
-            if type(df.loc[i,columns]) == str:    
-                df.loc[i,columns] = df.loc[i,columns].upper() 
+            if type(df.loc[i,column_name]) == str:    
+                df.loc[i,column_name] = df.loc[i,column_name].upper() 
                 '''converts the element into upper case'''
            
     except:
@@ -283,7 +283,7 @@ def checkUpper(columns):
         
         print('Column heading specified not present in table') 
         
-def stripSpaces(columns):
+def stripSpaces(column_name):
     '''
     So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
     TRY part and neglect the except part
@@ -300,8 +300,8 @@ def stripSpaces(columns):
             is string or not
             '''
 
-            if type(df.loc[i,columns]) == str:    
-                df.loc[i,columns] = df.loc[i,columns].strip() 
+            if type(df.loc[i,column_name]) == str:    
+                df.loc[i,column_name] = df.loc[i,column_name].strip() 
                 '''strips the element for empty spaces'''
            
     except:
@@ -313,7 +313,7 @@ def stripSpaces(columns):
         
         print('Column heading specified not present in table')
         
-def checkLower(columns):
+def checkLower(column_name):
     '''
     So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
     TRY part and neglect the except part
@@ -330,8 +330,8 @@ def checkLower(columns):
             is string or not
             '''
 
-            if type(df.loc[i,columns]) == str:    
-                df.loc[i,columns] = df.loc[i,columns].lower() 
+            if type(df.loc[i,column_name]) == str:    
+                df.loc[i,column_name] = df.loc[i,column_name].lower() 
                 '''converts the element into lower case'''
            
     except:
@@ -341,11 +341,30 @@ def checkLower(columns):
         in a seperate logging file
         '''
         
-        print('Column heading specified not present in table')
+        logger.info(f'Column name '{column_name}' specified not present in table')
+
+#return the index to the console file if the mail format is wrong
+def checkEmail(column_name):                        #function to check validity of the Email
+    for i in df[column_name]:
+        if (re.search(regex, i)):             #using regex to check all the known domains
+            continue
+        else:
+            flga = 0
+            flgb = 0
+            for i in df[column_name]:
+                num = 0
+                if (i == '@'):                #username should atleast have an '@'
+                    flga = 1
+                if (i == '.' and flga == 1):  #username should atleast have a '.'
+                    flgb = 1
+            if (flga == 1 and flgb == 1):
+                continue
+            else:
+                logger.info(f"Invalid Email in Column Index {num+1}\n ", df.index[df[column_name] == i])    #return the index to the console file if the mail format is wrong
 
 
-def checkPhoneNumber(phone_number):   #function to check the format of phone numbers
-    for i in df[phone_number]:
+def checkPhoneNumber(column_name):   #function to check the format of phone numbers
+    for i in df[column_name]:
         if(type(i) == str and len(i) == 10):   #if the number is in string format in the dataframe
             pass
         elif(type(i) == int):
@@ -357,29 +376,10 @@ def checkPhoneNumber(phone_number):   #function to check the format of phone num
             if(cnt == 10):
                 pass
             else:
-                print("INVALID PHONE NNUMBER  \n",df.index[df[phone_number] == i])  #return if the number is invalid
+                print("INVALID PHONE NNUMBER  \n",df.index[df[column_name] == i])  #return if the number is invalid
         else:
-            print("INVALID PHONE NNUMBER \n",df.index[df[phone_number] == i])
-
-
-def checkEmail(Email):                        #function to check validity of the Email
-    for i in df[Email]:
-        if (re.search(regex, i)):             #using regex to check all the known domains
-            continue
-        else:
-            flga = 0
-            flgb = 0
-            for i in df[Email]:
-                if (i == '@'):                #username should atleast have an '@'
-                    flga = 1
-                if (i == '.' and flga == 1):  #username should atleast have a '.'
-                    flgb = 1
-            if (flga == 1 and flgb == 1):
-                continue
-            else:
-                print("Invalid Email in Column Index \n ", df.index[df[Email] == i])    #return the index to the console file if the mail format is wrong
+            print("INVALID PHONE NNUMBER \n",df.index[df[column_name] == i])
 
 
 if __name__ == "__main__":
-   
    main()
