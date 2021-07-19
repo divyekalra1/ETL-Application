@@ -181,16 +181,17 @@ def checkNull(column_name):
         
         li = df[column_name].isnull().tolist() 
         num = 0 
+        lis=[]
         rows = df.shape[0]
         for i in li:
             if i == True:
+                lis.append(num)
                 logger.info("Error on line " + f"{num+1}\n" + f"{df.iloc[num]}")
-                # df.drop(index = num, inplace = True)
-
-
-#                 logging.warning(df.iloc[num])
-                # LOG THIS INTO .LOG FIlE INSTEAD OF DROPPING
             num = num + 1
+        print('indices found with null values', lis)
+        lis.reverse()
+        for j in lis:
+            df.drop(index = j, inplace = True)
     except:
         
         '''
