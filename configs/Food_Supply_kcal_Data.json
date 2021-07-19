@@ -5,7 +5,7 @@
     "columns": [
         {
             "name": "Country",
-            "filters": "checkNull"
+            "filters": "checkLower,stripSpaces,checkNull"
         },
         {
             "name": "Alcoholic Beverages",
