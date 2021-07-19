@@ -1,0 +1,16 @@
+{
+    "table_name": "checker",
+    "filetype": ".csv",
+    "overwrite": "False",
+    "num_columns": 2,
+    "columns": [
+        {
+            "name": "email",
+            "filters": "checkEmail"
+        },
+        {
+            "name": "phno",
+            "filters": ""
+        }
+    ]
+}

@@ -1,3 +1,6 @@
+'''
+    Importing all required Files and libraries
+'''
 from sqlalchemy import Column
 import pandas as pd
 from sqlalchemy.ext.declarative import declarative_base
@@ -31,12 +34,13 @@ logger.addHandler(file_handler)
 
 def main():
     Base = declarative_base() 
-    print("Creating Database...")
-
-    engine = create_engine('sqlite:///ETL-database.db', echo = True)
-    sqlite_connection = engine.connect() #connection definition
-    script_dir = os.path.dirname(__file__)
-    directory = Path(script_dir + "Target_Data") 
+    '''
+    echo = True is required if you want to see the commands SQLAlchemy is sending to the databse. Set it to False if it's not required
+    '''
+    engine = create_engine('sqlite:///ETL-database.db', echo = True) 
+    sqlite_connection = engine.connect() # sqlite3 connection initialised
+    script_dir = os.path.dirname(__file__) # Retrieved the relativ path of the current directory i.e. ETL-Application
+    directory = Path(script_dir + "Target_Data")  # Starts looking for new files in the Target_Data directory
     old_path = Path() # Empty generator object
     while True:
         if not keyboard.is_pressed('c'):  
@@ -46,6 +50,7 @@ def main():
                 print(file_path.suffix)
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
                 sqlite_table = f"{file_path.stem}" #Name for the table being created from a new data file  
+                
 
                 rewrite_choice = createConfig(file_path.stem, file_path.suffix)
                 if rewrite_choice == 1: # continue with existing config file
@@ -73,17 +78,20 @@ def main():
                     check = engine.has_table(sqlite_table)
                     if config["overwrite"].lower == "true":
                         stringy = 'replace'
-                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists=stringy) #Importing data to an sqlite3 database
+                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists=stringy) # Exporting the validated data to an SQL table
+                    logger.info(f"Table {sqlite_table} created")
+
                 except ValueError as ve: # Raise ValueError if table already exists
                     print(ve)
+                    logger.exception()
                 old_path = file_path # overwrite old path with current path
         else:
             break
     Base.metadata.create_all(engine) #Issue CREATE TABLE statement
     logger.info("Database Created")
-
     sqlite_connection.close() #Close the connection
     engine.dispose() #dispose of the engine
+    logger.info("Sqlite3 connection closed and Engine disposed.")
 
 
 def checkformat(file_path):
@@ -201,7 +209,6 @@ def checkNull(column_name):
         if the column name provided is not the column heading then this part of code will be executed. It will be logged
         in a seperate logging file
         '''
-        print('Column heading specified not present in table')   
         # LOG THIS INTO .LOG FIlE INSTEAD OF PRINTING
 
 
@@ -250,7 +257,7 @@ def checkProperCase(column_name):
         in a seperate logging file
         '''
         
-        print('Column heading specified not present in table')
+        logger.info(f'Column name "{column_name}" specified not present in table')
 
              
 def checkUpper(column_name):
@@ -311,7 +318,7 @@ def stripSpaces(column_name):
         in a seperate logging file
         '''
         
-        print('Column heading specified not present in table')
+        logger.info(f'Column name "{column_name}" specified not present in table')
         
 def checkLower(column_name):
     '''
@@ -341,7 +348,7 @@ def checkLower(column_name):
         in a seperate logging file
         '''
         
-        logger.info(f'Column name '{column_name}' specified not present in table')
+        logger.info(f'Column name "{column_name}" specified not present in table')
 
 #return the index to the console file if the mail format is wrong
 def checkEmail(column_name):                        #function to check validity of the Email
