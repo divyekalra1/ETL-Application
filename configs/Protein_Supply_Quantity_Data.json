@@ -1,6 +1,7 @@
 {
     "table_name": "Protein_Supply_Quantity_Data",
     "filetype": ".csv",
+    "overwrite": "False",
     "num_columns": 32,
     "columns": [
         {

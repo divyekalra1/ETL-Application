@@ -1,5 +1,5 @@
 '''
-    Importing all required Files and libraries
+Importing all required Files and libraries
 '''
 from sqlalchemy import Column
 import pandas as pd
@@ -13,6 +13,7 @@ import json
 import logging
 import dt as DATETIME
 import re   
+
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 ''' 
     A pandas dataframe is used to import data from a csv file downloaded from kaggle to an sqlite3 database file present in the same 
@@ -38,6 +39,7 @@ def main():
     echo = True is required if you want to see the commands SQLAlchemy is sending to the databse. Set it to False if it's not required
     '''
     engine = create_engine('sqlite:///ETL-database.db', echo = True) 
+    logger.info("Database Created")
     sqlite_connection = engine.connect() # sqlite3 connection initialised
     script_dir = os.path.dirname(__file__) # Retrieved the relativ path of the current directory i.e. ETL-Application
     directory = Path(script_dir + "Target_Data")  # Starts looking for new files in the Target_Data directory
@@ -50,8 +52,6 @@ def main():
                 print(file_path.suffix)
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
                 sqlite_table = f"{file_path.stem}" #Name for the table being created from a new data file  
-                
-
                 # checking if config file exists and create a config file according to the datafile in case it doesn't exist
                 rewrite_choice = createConfig(file_path.stem, file_path.suffix)
 
@@ -63,7 +63,8 @@ def main():
                         character = input(".json file configured ? [Y/y]  :")
                         if character == 'Y' or character == 'y':
                             break
-                
+                    logger.info("Received response from user to proceed with transformation")
+
                 # loads appropriate config file corresponding to the incoming file
                 script_dir = os.path.dirname(__file__)
                 rel_path = "configs/" + file_path.stem + ".json" 
@@ -82,7 +83,10 @@ def main():
                         str = str.strip()                                       # isolates filter name string, strips spaces
                         try:
                             filterSelect(str, config['columns'][i]['name'])
-                            logger.info(f"{str} filter applied to column \"{config['columns'][i]['name']}\"")
+                            if str != "":
+                                logger.info(f"{str} filter applied to column \"{config['columns'][i]['name']}\"")
+                            else :
+                                logger.info(f"No filter applied to column \"{config['columns'][i]['name']}\"")
                         except:
                             logger.exception(f"{str} filter FAILED to apply to column \"{config['columns'][i]['name']}\"")
 
@@ -96,16 +100,15 @@ def main():
                     logger.info(f"Table {sqlite_table} created")
                 except ValueError as ve: # Raise ValueError if table already exists
                     print(ve)
-                    logger.exception()
                 old_path = file_path # overwrite old path with current path
         else:
             break
     Base.metadata.create_all(engine) #Issue CREATE TABLE statement
-    logger.info("Database Created")
     sqlite_connection.close() #Close the connection
+    logger.info(schema)
     engine.dispose() #dispose of the engine
     logger.info("Sqlite3 connection closed and Engine disposed.")
-
+    
 
 def checkformat(file_path):
     if file_path.suffix == '.xlsx' or file_path.suffix == '.xls':
@@ -134,16 +137,6 @@ def createConfig(table_name, filetype):
             if  str == f.name:
                 print("Matching Config Found!")
                 return 1
-                # print("A config file for this filename already exists\nChoose an option (1 or 2)\n" \
-                #         "1) continue with existing config file\n" \
-                #         "2) overwrite existing config file and reconfigure\n")
-                # rewrite_choice = int(input("Enter Option: "))
-                # if rewrite_choice == 2: #wants to rewrite existing config file
-                #     continue
-                # elif rewrite_choice == 1:
-                #     return 1
-                # else:
-                #     return 1
     except:
         logger.exception(f"Ran into an issue when looking for an existing config file {table_name}.json")
 
@@ -211,7 +204,7 @@ def filterSelect(func_name, column_name):
         elif (func_name == "checkPhoneNumber"):
             checkPhoneNumber(column_name)
 
-        logging.info(f"selectFilter finished calling function {func_name}")
+        logger.info(f"selectFilter finished calling function {func_name}")
     except:
         logger.exception(f"Unable to call function {func_name}")
 
@@ -405,7 +398,7 @@ def checkEmail(column_name):                        #function to check validity 
             if (flga == 1 and flgb == 1):
                 continue
             else:
-                logger.info(f"Invalid Email in Column Index {num+1}\n ", df.index[df[column_name] == i])    #return the index to the console file if the mail format is wrong
+                logger.info(f"Invalid Email in Column")    #return the index to the console file if the mail format is wrong
 
 
 def checkPhoneNumber(column_name):   #function to check the format of phone numbers
