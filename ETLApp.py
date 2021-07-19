@@ -43,17 +43,20 @@ def main():
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
                 sqlite_table = f"{file_path.stem}" #Name for the table being created from a new data file  
 
-                createConfig(file_path.stem, file_path.suffix, df)
-                while (1):
-                    character = input("JSON Ready?\n")
-                    if character == 'Y' or character == 'y':
-                        break
+                rewrite_choice = createConfig(file_path.stem, file_path.suffix, df)
+                if rewrite_choice == 1: # continue with existing config file
+                    print("Continuing with same config file")
+                else:
+                    while (1):          # waiting for user to make changes in config file
+                        character = input(".json file configured ? [Y/y]  :")
+                        if character == 'Y' or character == 'y':
+                            break
+                
                 script_dir = os.path.dirname(__file__)
                 rel_path = "configs/" + file_path.stem + ".json" 
                 abs_file_path = os.path.join(script_dir, rel_path)
                 with open(abs_file_path, 'r') as config_file:
                     config = json.load(config_file)
-
                 for i in range(config['num_columns']):
                     filter_list = config['columns'][i]['filters'].split(',')
                     for str in filter_list:
@@ -64,11 +67,10 @@ def main():
                 # LOADING
                 try:
                     check = engine.has_table(sqlite_table)
-                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists='fail') #Importing data to an sqlite3 database
+                    df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists='append') #Importing data to an sqlite3 database
                 except ValueError as ve: # Raise ValueError if table already exists
                     print(ve)
                 old_path = file_path # overwrite old path with current path
-        
         else:
             break
     Base.metadata.create_all(engine) #Issue CREATE TABLE statement
@@ -91,18 +93,29 @@ def createConfig(table_name, filetype, df):
     '''
     creates config file using the parameters passed, table name, filetype, and the pandas dataframe df and stores it as config.json
     the user will have to manually edit config.json with the appropriate filters
+    returns 1 if doesn't want to reconfigure in case of existing config file
+    returns 0 otherwise
     '''
-    
+    print("Create Config Started RUNNING")
     #check if same file exists
     script_dir = os.path.dirname(__file__)
     directory = Path(script_dir + "configs") 
     str = table_name + ".json"
     for f in directory.iterdir():
         if  str == f.name:
-            print("YAYA")
             return 1
+            # print("A config file for this filename already exists\nChoose an option (1 or 2)\n" \
+            #         "1) continue with existing config file\n" \
+            #         "2) overwrite existing config file and reconfigure\n")
+            # rewrite_choice = int(input("Enter Option: "))
+            # if rewrite_choice == 2: #wants to rewrite existing config file
+            #     continue
+            # elif rewrite_choice == 1:
+            #     return 1
+            # else:
+            #     return 1
 
-    print("\n\n\t\t\t\t\t----------CONFIG CREATOR----------\n")
+    print("\n\n\t\t\t\t\tCreating a new config file(.json)\n")
 
     config['table_name'] = table_name
 
@@ -125,8 +138,9 @@ def createConfig(table_name, filetype, df):
     script_dir = os.path.dirname(__file__)
     rel_path = "configs/" + table_name + ".json" 
     abs_file_path = os.path.join(script_dir, rel_path)
-    with open(abs_file_path , 'a') as config_file:
+    with open(abs_file_path , 'w') as config_file:
         config_file.write(json.dumps(config, indent = 4))
+    return 0
 
 
 def filterSelect(func_name, column_name):
@@ -152,30 +166,31 @@ def filterSelect(func_name, column_name):
 def checkNull(column_name):                  
     # INPUT WILL BE FROM CONFIG FILE
     try:
-        
         '''
          This list contains a series of boolean values if the datavalue is NaN it will have True in its corresponding 'i'th 
          position or it wll have False in its corresponding 'i'th position
         '''
-        
         li = df[column_name].isnull().tolist() 
-        num = 0                                
+        num = 0 
+        lis=[] 
+        '''empty list which will contain the idices of all the rows which have NaN values '''
+        
         for i in li:
             if i == True:
+                lis.append(num)
                 logger.info("Error on line " + f"{num+1}\n" + f"{df.iloc[num]}")
-                # df.drop(index = num, inplace = True)
-
-
-#                 logging.warning(df.iloc[num])
-                # LOG THIS INTO .LOG FIlE INSTEAD OF DROPPING
             num = num + 1
+        print('indices found with null values', lis)
+        lis.reverse()
+        ''' reverses the list'''
+
+        for j in lis:
+            df.drop(index = j, inplace = True)
     except:
-        
         '''
-        if the argument returned is not the column heading then this part of code will be executed. It will be logged
+        if the column name provided is not the column heading then this part of code will be executed. It will be logged
         in a seperate logging file
         '''
-        
         print('Column heading specified not present in table')   
         # LOG THIS INTO .LOG FIlE INSTEAD OF PRINTING
 
@@ -189,33 +204,126 @@ def checkNull(column_name):
 #         vippul.ddf(dd, df[column_name])
 #         vippul.ft(dt, df[column_name])
 
-def checkProperCase(column_name): #W
-    num = 0
-    for i in df[column_name]:
-        if type(i) == str:
-            df.loc[num,column_name] = df.loc[num,column_name].title()
-        num = num + 1    
+def checkProperCase(columns):
+    '''
+    So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
+    TRY part and neglect the except part
+    '''
+    try:
+        '''
+        So df.index is a pandas command which returns the series of index of the dataframe. Index is unique to each and every row
+        present in the table. .tolist() function is used to convert the data type returned by .index commmand to list so that it
+        can be iterated easily
+        '''    
+        for i in df.index.tolist():
+            ''' 
+            Checks whether the data type of elements present in specified column
+            is string or not
+            '''
+
+            if type(df.loc[i,columns]) == str:    
+                df.loc[i,columns] = df.loc[i,columns].title() 
+                '''converts the element into title case'''
+           
+    except:
+        
+        '''
+        if the argument provided is not the column heading then this part of code will be executed. It will be logged
+        in a seperate logging file
+        '''
+        
+        print('Column heading specified not present in table')
+
              
-def checkUpper(column_name):
-    n = 0
-    for i in df[column_name]:
-        if type(i) == str:
-            df.loc[n,column_name] = df.loc[n,column_name].upper()
-        n = n + 1  
+def checkUpper(columns):
+    '''
+    So if the argumenet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
+    TRY part and neglect the except part
+    '''
+    try:
+        '''
+        So df.index is a pandas command which returns the series of index of the dataframe. Index is unique to each and every row
+        present in the table. .tolist() function is used to convert the data type returned by .index commmand to list so that it
+        can be iterated easily
+        '''    
+        for i in df.index.tolist():
+            ''' 
+            Checks whether the data type of elements present in specified column
+            is string or not
+            '''
+
+            if type(df.loc[i,columns]) == str:    
+                df.loc[i,columns] = df.loc[i,columns].upper() 
+                '''converts the element into upper case'''
+           
+    except:
         
-def stripSpaces(column_name): #W
-    n = 0
-    for i in df[column_name]:
-        if type(i) == str:
-            df.loc[n,column_name] = df.loc[n,column_name].strip()
-        n = n + 1   
+        '''
+        if the argument provided is not the column heading then this part of code will be executed. It will be logged
+        in a seperate logging file
+        '''
         
-def checkLower(column_name):
-    n = 0
-    for i in df[column_name]:
-        if type(i) == str:
-            df.loc[n,column_name] = df.loc[n,column_name].lower()
-        n = n + 1 
+        print('Column heading specified not present in table') 
+        
+def stripSpaces(columns):
+    '''
+    So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
+    TRY part and neglect the except part
+    '''
+    try:
+        '''
+        So df.index is a pandas command which returns the series of index of the dataframe. Index is unique to each and every row
+        present in the table. .tolist() function is used to convert the data type returned by .index commmand to list so that it
+        can be iterated easily
+        '''    
+        for i in df.index.tolist():
+            ''' 
+            Checks whether the data type of elements present in specified column
+            is string or not
+            '''
+
+            if type(df.loc[i,columns]) == str:    
+                df.loc[i,columns] = df.loc[i,columns].strip() 
+                '''strips the element for empty spaces'''
+           
+    except:
+        
+        '''
+        if the argument provided is not the column heading then this part of code will be executed. It will be logged
+        in a seperate logging file
+        '''
+        
+        print('Column heading specified not present in table')
+        
+def checkLower(columns):
+    '''
+    So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
+    TRY part and neglect the except part
+    '''
+    try:
+        '''
+        So df.index is a pandas command which returns the series of index of the dataframe. Index is unique to each and every row
+        present in the table. .tolist() function is used to convert the data type returned by .index commmand to list so that it
+        can be iterated easily
+        '''    
+        for i in df.index.tolist():
+            ''' 
+            Checks whether the data type of elements present in specified column
+            is string or not
+            '''
+
+            if type(df.loc[i,columns]) == str:    
+                df.loc[i,columns] = df.loc[i,columns].lower() 
+                '''converts the element into lower case'''
+           
+    except:
+        
+        '''
+        if the argument provided is not the column heading then this part of code will be executed. It will be logged
+        in a seperate logging file
+        '''
+        
+        print('Column heading specified not present in table')
 
 
 if __name__ == "__main__":

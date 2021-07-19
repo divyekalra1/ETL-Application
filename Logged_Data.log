@@ -1,0 +1,408 @@
+2021-07-19 22:53:26,881:__main__:Error on line 1
+Country                              NaN
+Alcoholic Beverages                  0.0
+Animal Products                   9.7523
+Animal fats                       0.0277
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         35.9771
+Eggs                              0.4067
+Fish, Seafood                     0.0647
+Fruits - Excluding Wine           0.5824
+Meat                              3.1337
+Milk - Excluding Butter           5.5278
+Offals                            0.5916
+Oilcrops                          0.2034
+Pulses                            1.2479
+Spices                            0.1664
+Starchy Roots                     0.1941
+Stimulants                        0.5546
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.1387
+Vegetal Products                 40.2477
+Vegetable Oils                       0.0
+Vegetables                         1.137
+Miscellaneous                     0.0462
+Obesity                              4.5
+Undernourished                      29.8
+Confirmed                       0.142134
+Deaths                          0.006186
+Recovered                       0.123374
+Active                          0.012574
+Population                      38928000
+Unit (all except Population)           %
+Name: 0, dtype: object
+2021-07-19 22:53:26,883:__main__:Error on line 23
+Country                              NaN
+Alcoholic Beverages                1.366
+Animal Products                   7.1846
+Animal fats                       0.0066
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         29.1784
+Eggs                              0.4466
+Fish, Seafood                     1.4842
+Fruits - Excluding Wine           0.0591
+Meat                               2.975
+Milk - Excluding Butter           1.7666
+Offals                            0.5057
+Oilcrops                          5.7595
+Pulses                            5.6019
+Spices                            0.0657
+Starchy Roots                     0.2496
+Stimulants                        0.0328
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.0854
+Vegetal Products                 42.8121
+Vegetable Oils                       0.0
+Vegetables                        0.3809
+Miscellaneous                     0.0394
+Obesity                              4.5
+Undernourished                        20
+Confirmed                        0.05371
+Deaths                          0.000641
+Recovered                       0.048031
+Active                          0.005038
+Population                      20903000
+Unit (all except Population)           %
+Name: 22, dtype: object
+2021-07-19 22:53:26,885:__main__:Error on line 30
+Country                              NaN
+Alcoholic Beverages               0.2314
+Animal Products                  25.6899
+Animal fats                       0.1016
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         17.7775
+Eggs                              1.6141
+Fish, Seafood                     2.0374
+Fruits - Excluding Wine           0.4966
+Meat                             16.5077
+Milk - Excluding Butter            5.226
+Offals                            0.1919
+Oilcrops                          0.4571
+Pulses                            1.3996
+Spices                            0.0282
+Starchy Roots                     1.8285
+Stimulants                         0.316
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.2653
+Vegetal Products                 24.3185
+Vegetable Oils                    0.0169
+Vegetables                        1.4222
+Miscellaneous                     0.0734
+Obesity                             28.8
+Undernourished                       2.7
+Confirmed                       3.842229
+Deaths                          0.097047
+Recovered                       3.626194
+Active                               NaN
+Population                      19470000
+Unit (all except Population)           %
+Name: 29, dtype: object
+2021-07-19 22:53:26,886:__main__:Error on line 37
+Country                              NaN
+Alcoholic Beverages               0.1187
+Animal Products                  18.4193
+Animal fats                       0.0057
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         17.5712
+Eggs                              1.3795
+Fish, Seafood                     0.8706
+Fruits - Excluding Wine           1.1703
+Meat                             11.1771
+Milk - Excluding Butter           4.3024
+Offals                            0.6841
+Oilcrops                          2.6063
+Pulses                            6.5242
+Spices                            0.0283
+Starchy Roots                     1.2438
+Stimulants                        0.1753
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                             0.0
+Vegetal Products                 31.5807
+Vegetable Oils                       0.0
+Vegetables                        2.1088
+Miscellaneous                     0.0339
+Obesity                             26.7
+Undernourished                      <2.5
+Confirmed                        0.28376
+Deaths                          0.002065
+Recovered                       0.230822
+Active                          0.050873
+Population                      11281000
+Unit (all except Population)           %
+Name: 36, dtype: object
+2021-07-19 22:54:12,415:__main__:Error on line 1
+Country                              NaN
+Alcoholic Beverages                  0.0
+Animal Products                   9.7523
+Animal fats                       0.0277
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         35.9771
+Eggs                              0.4067
+Fish, Seafood                     0.0647
+Fruits - Excluding Wine           0.5824
+Meat                              3.1337
+Milk - Excluding Butter           5.5278
+Offals                            0.5916
+Oilcrops                          0.2034
+Pulses                            1.2479
+Spices                            0.1664
+Starchy Roots                     0.1941
+Stimulants                        0.5546
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.1387
+Vegetal Products                 40.2477
+Vegetable Oils                       0.0
+Vegetables                         1.137
+Miscellaneous                     0.0462
+Obesity                              4.5
+Undernourished                      29.8
+Confirmed                       0.142134
+Deaths                          0.006186
+Recovered                       0.123374
+Active                          0.012574
+Population                      38928000
+Unit (all except Population)           %
+Name: 0, dtype: object
+2021-07-19 22:54:12,416:__main__:Error on line 23
+Country                              NaN
+Alcoholic Beverages                1.366
+Animal Products                   7.1846
+Animal fats                       0.0066
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         29.1784
+Eggs                              0.4466
+Fish, Seafood                     1.4842
+Fruits - Excluding Wine           0.0591
+Meat                               2.975
+Milk - Excluding Butter           1.7666
+Offals                            0.5057
+Oilcrops                          5.7595
+Pulses                            5.6019
+Spices                            0.0657
+Starchy Roots                     0.2496
+Stimulants                        0.0328
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.0854
+Vegetal Products                 42.8121
+Vegetable Oils                       0.0
+Vegetables                        0.3809
+Miscellaneous                     0.0394
+Obesity                              4.5
+Undernourished                        20
+Confirmed                        0.05371
+Deaths                          0.000641
+Recovered                       0.048031
+Active                          0.005038
+Population                      20903000
+Unit (all except Population)           %
+Name: 22, dtype: object
+2021-07-19 22:54:12,417:__main__:Error on line 30
+Country                              NaN
+Alcoholic Beverages               0.2314
+Animal Products                  25.6899
+Animal fats                       0.1016
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         17.7775
+Eggs                              1.6141
+Fish, Seafood                     2.0374
+Fruits - Excluding Wine           0.4966
+Meat                             16.5077
+Milk - Excluding Butter            5.226
+Offals                            0.1919
+Oilcrops                          0.4571
+Pulses                            1.3996
+Spices                            0.0282
+Starchy Roots                     1.8285
+Stimulants                         0.316
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.2653
+Vegetal Products                 24.3185
+Vegetable Oils                    0.0169
+Vegetables                        1.4222
+Miscellaneous                     0.0734
+Obesity                             28.8
+Undernourished                       2.7
+Confirmed                       3.842229
+Deaths                          0.097047
+Recovered                       3.626194
+Active                               NaN
+Population                      19470000
+Unit (all except Population)           %
+Name: 29, dtype: object
+2021-07-19 22:54:12,417:__main__:Error on line 37
+Country                              NaN
+Alcoholic Beverages               0.1187
+Animal Products                  18.4193
+Animal fats                       0.0057
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         17.5712
+Eggs                              1.3795
+Fish, Seafood                     0.8706
+Fruits - Excluding Wine           1.1703
+Meat                             11.1771
+Milk - Excluding Butter           4.3024
+Offals                            0.6841
+Oilcrops                          2.6063
+Pulses                            6.5242
+Spices                            0.0283
+Starchy Roots                     1.2438
+Stimulants                        0.1753
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                             0.0
+Vegetal Products                 31.5807
+Vegetable Oils                       0.0
+Vegetables                        2.1088
+Miscellaneous                     0.0339
+Obesity                             26.7
+Undernourished                      <2.5
+Confirmed                        0.28376
+Deaths                          0.002065
+Recovered                       0.230822
+Active                          0.050873
+Population                      11281000
+Unit (all except Population)           %
+Name: 36, dtype: object
+2021-07-19 22:54:25,513:__main__:Error on line 1
+Country                              NaN
+Alcoholic Beverages                  0.0
+Animal Products                   9.7523
+Animal fats                       0.0277
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         35.9771
+Eggs                              0.4067
+Fish, Seafood                     0.0647
+Fruits - Excluding Wine           0.5824
+Meat                              3.1337
+Milk - Excluding Butter           5.5278
+Offals                            0.5916
+Oilcrops                          0.2034
+Pulses                            1.2479
+Spices                            0.1664
+Starchy Roots                     0.1941
+Stimulants                        0.5546
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.1387
+Vegetal Products                 40.2477
+Vegetable Oils                       0.0
+Vegetables                         1.137
+Miscellaneous                     0.0462
+Obesity                              4.5
+Undernourished                      29.8
+Confirmed                       0.142134
+Deaths                          0.006186
+Recovered                       0.123374
+Active                          0.012574
+Population                      38928000
+Unit (all except Population)           %
+Name: 0, dtype: object
+2021-07-19 22:54:25,514:__main__:Error on line 23
+Country                              NaN
+Alcoholic Beverages                1.366
+Animal Products                   7.1846
+Animal fats                       0.0066
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         29.1784
+Eggs                              0.4466
+Fish, Seafood                     1.4842
+Fruits - Excluding Wine           0.0591
+Meat                               2.975
+Milk - Excluding Butter           1.7666
+Offals                            0.5057
+Oilcrops                          5.7595
+Pulses                            5.6019
+Spices                            0.0657
+Starchy Roots                     0.2496
+Stimulants                        0.0328
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.0854
+Vegetal Products                 42.8121
+Vegetable Oils                       0.0
+Vegetables                        0.3809
+Miscellaneous                     0.0394
+Obesity                              4.5
+Undernourished                        20
+Confirmed                        0.05371
+Deaths                          0.000641
+Recovered                       0.048031
+Active                          0.005038
+Population                      20903000
+Unit (all except Population)           %
+Name: 22, dtype: object
+2021-07-19 22:54:25,515:__main__:Error on line 30
+Country                              NaN
+Alcoholic Beverages               0.2314
+Animal Products                  25.6899
+Animal fats                       0.1016
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         17.7775
+Eggs                              1.6141
+Fish, Seafood                     2.0374
+Fruits - Excluding Wine           0.4966
+Meat                             16.5077
+Milk - Excluding Butter            5.226
+Offals                            0.1919
+Oilcrops                          0.4571
+Pulses                            1.3996
+Spices                            0.0282
+Starchy Roots                     1.8285
+Stimulants                         0.316
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                          0.2653
+Vegetal Products                 24.3185
+Vegetable Oils                    0.0169
+Vegetables                        1.4222
+Miscellaneous                     0.0734
+Obesity                             28.8
+Undernourished                       2.7
+Confirmed                       3.842229
+Deaths                          0.097047
+Recovered                       3.626194
+Active                               NaN
+Population                      19470000
+Unit (all except Population)           %
+Name: 29, dtype: object
+2021-07-19 22:54:25,516:__main__:Error on line 37
+Country                              NaN
+Alcoholic Beverages               0.1187
+Animal Products                  18.4193
+Animal fats                       0.0057
+Aquatic Products, Other              0.0
+Cereals - Excluding Beer         17.5712
+Eggs                              1.3795
+Fish, Seafood                     0.8706
+Fruits - Excluding Wine           1.1703
+Meat                             11.1771
+Milk - Excluding Butter           4.3024
+Offals                            0.6841
+Oilcrops                          2.6063
+Pulses                            6.5242
+Spices                            0.0283
+Starchy Roots                     1.2438
+Stimulants                        0.1753
+Sugar Crops                          0.0
+Sugar & Sweeteners                   0.0
+Treenuts                             0.0
+Vegetal Products                 31.5807
+Vegetable Oils                       0.0
+Vegetables                        2.1088
+Miscellaneous                     0.0339
+Obesity                             26.7
+Undernourished                      <2.5
+Confirmed                        0.28376
+Deaths                          0.002065
+Recovered                       0.230822
+Active                          0.050873
+Population                      11281000
+Unit (all except Population)           %
+Name: 36, dtype: object
