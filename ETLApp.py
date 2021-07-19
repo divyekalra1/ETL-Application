@@ -8,8 +8,10 @@ import keyboard
 import os
 import json
 import logging
+import dt as doodoo
 
-#import vippultime as vippul
+
+#import doodootime as doodoo
 ''' 
     A pandas dataframe is used to import data from a csv file downloaded from kaggle to an sqlite3 database file present in the same 
     directory
@@ -29,7 +31,8 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 def main():
-   
+    
+
     Base = declarative_base() 
     print("Creating Database...")
     engine = create_engine('sqlite:///ETL-database.db', echo = True)
@@ -46,7 +49,7 @@ def main():
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
                 sqlite_table = f"{file_path.stem}" #Name for the table being created from a new data file  
 
-                rewrite_choice = createConfig(file_path.stem, file_path.suffix, df)
+                rewrite_choice = createConfig(file_path.stem, file_path.suffix)
                 if rewrite_choice == 1: # continue with existing config file
                     print("Continuing with same config file")
                 else:
@@ -92,7 +95,7 @@ def checkformat(file_path):
     #     frame = pd.read_json(f"Target_Data/{file_path.name}")
     return frame
     
-def createConfig(table_name, filetype, df):
+def createConfig(table_name, filetype):
     '''
     creates config file using the parameters passed, table name, filetype, and the pandas dataframe df and stores it as config.json
     the user will have to manually edit config.json with the appropriate filters
@@ -201,14 +204,23 @@ def checkNull(column_name):
         # LOG THIS INTO .LOG FIlE INSTEAD OF PRINTING
 
 
-# def checkDateTime(column_name):
-    
-#     dt = ""
-#     dd = ""
-#     for row in df[column_name]:
-#         dt,dd = vippul.ddt(row)
-#         vippul.ddf(dd, df[column_name])
-#         vippul.ft(dt, df[column_name])
+def checkDateTime(column_name):
+    listi = df[column_name].tolist()    
+    listr = []
+    dt = ""
+    dd = ""
+    i=0
+    for row in listi:
+        dt,dd = doodoo.ddt(row)
+        i = i + 1
+        if dt=="":
+            print("Loop ", i)
+            listr.append(doodoo.ddf(dd, listi))
+        else:
+            pass #Time function to be added 
+        #error printed in function the string is errored
+    for row in listr:
+         
 
 def checkProperCase(columns):
     '''
@@ -369,4 +381,5 @@ def checkEmail(Email):                        #function to check validity of the
 
 
 if __name__ == "__main__":
+   
    main()
