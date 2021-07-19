@@ -24,13 +24,13 @@ Link to the google drive for this project : https://drive.google.com/drive/folde
 
 #date formats supported
 Date
-#char and int->
+#char and int:-
 dd mmm yy
 dd mmm yyyy
 mmm dd yy
 mmm dd yyyy
 
-#int only->
+#int only:-
 mm dd yy
 mm dd yyyy
 dd mm yy
