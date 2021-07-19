@@ -105,11 +105,8 @@ def main():
             break
     Base.metadata.create_all(engine) #Issue CREATE TABLE statement
     sqlite_connection.close() #Close the connection
-    logger.info(schema)
     engine.dispose() #dispose of the engine
     logger.info("Sqlite3 connection closed and Engine disposed.")
-    
-
 def checkformat(file_path):
     if file_path.suffix == '.xlsx' or file_path.suffix == '.xls':
         frame = pd.read_excel(f"Target_Data/{file_path.name}", engine='openpyxl')
@@ -233,6 +230,8 @@ def checkNull(column_name):
 
         for j in lis:
             df.drop(index = j, inplace = True)
+        logger.info('Sucessfully removed the rows that had NaN in ' + f"{column_name}")    
+
     except:
         '''
         if the column name provided is not the column heading then this part of code will be executed. It will be logged
@@ -280,7 +279,8 @@ def checkProperCase(column_name):
             if type(df.loc[i,column_name]) == str:    
                 df.loc[i,column_name] = df.loc[i,column_name].title() 
                 '''converts the element into title case'''
-           
+        logger.info('Successfully converted all the elements in the '+ f"{column_name}" ' to title case')
+  
     except:
         
         '''
@@ -311,6 +311,8 @@ def checkUpper(column_name):
             if type(df.loc[i,column_name]) == str:    
                 df.loc[i,column_name] = df.loc[i,column_name].upper() 
                 '''converts the element into upper case'''
+        logger.info('Successfully converted all the elements in the '+ f"{column_name}" ' to upper case')   
+
            
     except:
         
@@ -318,8 +320,8 @@ def checkUpper(column_name):
         if the argument provided is not the column heading then this part of code will be executed. It will be logged
         in a seperate logging file
         '''
-        
-        print('Column heading specified not present in table') 
+        logger.info(f'Column name "{column_name}" specified not present in table')
+
         
 def stripSpaces(column_name):
     '''
@@ -341,6 +343,8 @@ def stripSpaces(column_name):
             if type(df.loc[i,column_name]) == str:    
                 df.loc[i,column_name] = df.loc[i,column_name].strip() 
                 '''strips the element for empty spaces'''
+        logger.info('Successfully stripped for spaces all the elements in the '+ f"{column_name}")  
+
            
     except:
         
@@ -371,7 +375,8 @@ def checkLower(column_name):
             if type(df.loc[i,column_name]) == str:    
                 df.loc[i,column_name] = df.loc[i,column_name].lower() 
                 '''converts the element into lower case'''
-           
+        logger.info('Successfully converted all the elements in the '+ f"{column_name}" ' to lower case')        
+  
     except:
         
         '''
