@@ -21,3 +21,18 @@ https://www.kaggle.com/varpit94/goldman-sachs-stock-data-updated-till-1jul2021
 The .csv file is then read into a Pandas data frame and an SQLAlchemy connection is used along with it to import the data into an sqlite3 database.
 
 Link to the google drive for this project : https://drive.google.com/drive/folders/1Stl16Z5i03GDCxKczD-IjtOqF5IMXsk2?usp=sharing
+
+#date formats supported
+Date
+#char and int:-
+dd mmm yy
+dd mmm yyyy
+mmm dd yy
+mmm dd yyyy
+
+#int only:-
+mm dd yy
+mm dd yyyy
+dd mm yy
+dd mm yyyy
+yyyy mm dd
