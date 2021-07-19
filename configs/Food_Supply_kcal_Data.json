@@ -1,0 +1,135 @@
+{
+    "table_name": "Food_Supply_kcal_Data",
+    "filetype": ".csv",
+    "num_columns": 32,
+    "columns": [
+        {
+            "name": "Country",
+            "filters": "checkUpper,stripSpaces"
+        },
+        {
+            "name": "Alcoholic Beverages",
+            "filters": ""
+        },
+        {
+            "name": "Animal Products",
+            "filters": ""
+        },
+        {
+            "name": "Animal fats",
+            "filters": ""
+        },
+        {
+            "name": "Aquatic Products, Other",
+            "filters": ""
+        },
+        {
+            "name": "Cereals - Excluding Beer",
+            "filters": ""
+        },
+        {
+            "name": "Eggs",
+            "filters": ""
+        },
+        {
+            "name": "Fish, Seafood",
+            "filters": ""
+        },
+        {
+            "name": "Fruits - Excluding Wine",
+            "filters": ""
+        },
+        {
+            "name": "Meat",
+            "filters": ""
+        },
+        {
+            "name": "Milk - Excluding Butter",
+            "filters": ""
+        },
+        {
+            "name": "Miscellaneous",
+            "filters": ""
+        },
+        {
+            "name": "Offals",
+            "filters": ""
+        },
+        {
+            "name": "Oilcrops",
+            "filters": ""
+        },
+        {
+            "name": "Pulses",
+            "filters": ""
+        },
+        {
+            "name": "Spices",
+            "filters": ""
+        },
+        {
+            "name": "Starchy Roots",
+            "filters": ""
+        },
+        {
+            "name": "Stimulants",
+            "filters": ""
+        },
+        {
+            "name": "Sugar Crops",
+            "filters": ""
+        },
+        {
+            "name": "Sugar & Sweeteners",
+            "filters": ""
+        },
+        {
+            "name": "Treenuts",
+            "filters": ""
+        },
+        {
+            "name": "Vegetal Products",
+            "filters": ""
+        },
+        {
+            "name": "Vegetable Oils",
+            "filters": ""
+        },
+        {
+            "name": "Vegetables",
+            "filters": ""
+        },
+        {
+            "name": "Obesity",
+            "filters": ""
+        },
+        {
+            "name": "Undernourished",
+            "filters": ""
+        },
+        {
+            "name": "Confirmed",
+            "filters": ""
+        },
+        {
+            "name": "Deaths",
+            "filters": ""
+        },
+        {
+            "name": "Recovered",
+            "filters": ""
+        },
+        {
+            "name": "Active",
+            "filters": ""
+        },
+        {
+            "name": "Population",
+            "filters": ""
+        },
+        {
+            "name": "Unit (all except Population)",
+            "filters": ""
+        }
+    ]
+}

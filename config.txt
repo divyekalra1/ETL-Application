@@ -1,8 +1,0 @@
-{
-    "name": "VIppul",
-    "rollno": 1
-}
-{
-    "name": "Sathya",
-    "rollno": 11
-}
