@@ -43,11 +43,14 @@ def main():
                 df = checkformat(file_path) #Checking for the format of the file and reading it into a pandas dataframe
                 sqlite_table = f"{file_path.stem}" #Name for the table being created from a new data file  
 
-                createConfig(file_path.stem, file_path.suffix, df)
-                while (1):
-                    character = input("JSON Ready?\n")
-                    if character == 'Y' or character == 'y':
-                        break
+                rewrite_choice = createConfig(file_path.stem, file_path.suffix, df)
+                if rewrite_choice == 1: # continue with existing config file
+                    print("Continuing with same config file")
+                else:
+                    while (1):          # waiting for user to make changes in config file
+                        character = input("JSON Ready?\n")
+                        if character == 'Y' or character == 'y':
+                            break
                 script_dir = os.path.dirname(__file__)
                 rel_path = "configs/" + file_path.stem + ".json" 
                 abs_file_path = os.path.join(script_dir, rel_path)
@@ -91,16 +94,27 @@ def createConfig(table_name, filetype, df):
     '''
     creates config file using the parameters passed, table name, filetype, and the pandas dataframe df and stores it as config.json
     the user will have to manually edit config.json with the appropriate filters
+    returns 1 if doesn't want to reconfigure in case of existing config file
+    returns 0 otherwise
     '''
-    
+    print("Create Config Started RUNNING")
     #check if same file exists
     script_dir = os.path.dirname(__file__)
     directory = Path(script_dir + "configs") 
     str = table_name + ".json"
     for f in directory.iterdir():
         if  str == f.name:
-            print("YAYA")
             return 1
+            # print("A config file for this filename already exists\nChoose an option (1 or 2)\n" \
+            #         "1) continue with existing config file\n" \
+            #         "2) overwrite existing config file and reconfigure\n")
+            # rewrite_choice = int(input("Enter Option: "))
+            # if rewrite_choice == 2: #wants to rewrite existing config file
+            #     continue
+            # elif rewrite_choice == 1:
+            #     return 1
+            # else:
+            #     return 1
 
     print("\n\n\t\t\t\t\t----------CONFIG CREATOR----------\n")
 
@@ -125,8 +139,9 @@ def createConfig(table_name, filetype, df):
     script_dir = os.path.dirname(__file__)
     rel_path = "configs/" + table_name + ".json" 
     abs_file_path = os.path.join(script_dir, rel_path)
-    with open(abs_file_path , 'a') as config_file:
+    with open(abs_file_path , 'w') as config_file:
         config_file.write(json.dumps(config, indent = 4))
+    return 0
 
 
 def filterSelect(func_name, column_name):
