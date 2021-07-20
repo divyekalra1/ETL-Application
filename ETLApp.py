@@ -387,43 +387,40 @@ def checkLower(column_name):
         
         logger.info(f'Column name "{column_name}" specified not present in table')
 
-#return the index to the console file if the mail format is wrong
-def checkEmail(column_name):                        #function to check validity of the Email
-    for i in df[column_name]:
-        if (re.search(regex, i)):             #using regex to check all the known domains
-            continue
+def checkEmail(Email):    #function to verify email format
+    new_email = df[Email].tolist()     # iterate through the list and check with regular expressions
+    for i in new_email:
+        if(re.search(regex,i)):   
+                continue  
         else:
             flga = 0
             flgb = 0
-            for i in df[column_name]:
-                num = 0
-                if (i == '@'):                #username should atleast have an '@'
-                    flga = 1
-                if (i == '.' and flga == 1):  #username should atleast have a '.'
+            for j in new_email[new_email.index(i)]:         #if regex does not match then just check for '@' and '.'
+                if(j == '@'):
+                    flga =1
+                if(j == '.' and flga == 1):
                     flgb = 1
-            if (flga == 1 and flgb == 1):
+            if(flga == 1 and flgb == 1):
                 continue
             else:
-                logger.info(f"Invalid Email in Column")    #return the index to the console file if the mail format is wrong
-
-
-def checkPhoneNumber(column_name):   #function to check the format of phone numbers
-    for i in df[column_name]:
-        if(type(i) == str and len(i) == 10):   #if the number is in string format in the dataframe
+                logger.info("Invalid email present in this row (details): -> " + f"{df.loc[new_email.index(i)]}")     #print out the faulty column index for the particular email
+                
+                
+                
+def checkPhoneNumber(phone_number):    #function to check phone format
+    new_df = df[phone_number].tolist()
+    for i in new_df:
+        if(type(i) == str and len(i) == 10 and i.isdigit()):    #if the file cell has str type data type then apply these conditions
             pass
-        elif(type(i) == int):
+        elif(type(i) == int):   #if the data type is int check if it has 10 numbers
             cnt = 0
-            while(i):                           #if the number is in integer format in the dataframe
+            while(i):
                 cnt = cnt +1
                 i = i/10
                 i = int(i)
             if(cnt == 10):
                 pass
             else:
-                print("INVALID PHONE NNUMBER  \n",df.index[df[column_name] == i])  #return if the number is invalid
+                logger.info("Invalid phone number present in this row (details): -> " + f"{df.loc[new_df.index(i)]}") #print the faulty column index corresponding to the phone numbers 
         else:
-            print("INVALID PHONE NNUMBER \n",df.index[df[column_name] == i])
-
-
-if __name__ == "__main__":
-   main()
+            logger.info("Invalid phone number in this row (details): -> " + f"{df.loc[new_df.index(i)]}")                
