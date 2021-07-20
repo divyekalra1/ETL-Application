@@ -172,11 +172,12 @@ def createConfig(table_name, filetype):
 
         logger.info(f" {table_name}.json config file saved inside of the configs folder. Ready to be configured with filters")
         print(f" {table_name}.json config file saved inside of the configs folder. Ready to be configured with filters")
+        return 0
     except:
         logger.exception(f"Unable to save {table_name}.json config file in the configs folder")
         print(f"Unable to save {table_name}.json config file in the configs folder")
 
-    return 0
+    return 2
 
 
 def filterSelect(func_name, column_name):
