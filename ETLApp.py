@@ -16,8 +16,7 @@ import re
 
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 ''' 
-    A pandas dataframe is used to import data from a csv file downloaded from kaggle to an sqlite3 database file present in the same 
-    directory
+    A pandas dataframe is used to import data from a csv file to an sqlite3 database file present in the same directory
 ''' 
 config = {}
 filter_names = ["checkNull", "checkUpper", "checkLower", "checkProperCase", "stripSpaces", "checkEmail", "checkDateTime", "checkPhoneNumber"]
@@ -112,9 +111,6 @@ def checkformat(file_path):
         frame = pd.read_excel(f"Target_Data/{file_path.name}", engine='openpyxl')
     elif file_path.suffix == '.csv':
         frame = pd.read_csv(f"Target_Data/{file_path.name}")
-    # json file support to be added later
-    # elif file_path.suffix == '.json':
-    #     frame = pd.read_json(f"Target_Data/{file_path.name}")
     return frame
     
 def createConfig(table_name, filetype):
