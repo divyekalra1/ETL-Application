@@ -7,22 +7,23 @@ import re
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'       # This regex is used to define a general format for checking the validity of emails present in the dataframe
 
 
-def checkEmail(Email):                        #function to check validity of the Email
-    for i in df[Email]:
-        if (re.search(regex, i)):             #using regex to check all the known domains
-            continue
+def checkEmail(Email):    #function to verify email format
+    new_email = df[Email].tolist()     # iterate through the list and check with regular expressions
+    for i in new_email:
+        if(re.search(regex,i)):   
+                continue  
         else:
             flga = 0
             flgb = 0
-            for i in df[Email]:
-                if (i == '@'):                #username should atleast have an '@'
-                    flga = 1
-                if (i == '.' and flga == 1):  #username should atleast have a '.'
+            for j in new_email[new_email.index(i)]:         #if regex does not match then just check for '@' and '.'
+                if(j == '@'):
+                    flga =1
+                if(j == '.' and flga == 1):
                     flgb = 1
-            if (flga == 1 and flgb == 1):
+            if(flga == 1 and flgb == 1):
                 continue
             else:
-                print("Invalid Email in Column Index \n ", df.index[df[Email] == i])    #return the index to the console file if the mail format is wrong
+                print("Invalid Email in Column Index -> " ,new_email.index(i) , "\n")     #print out the faulty column index for the particular email
 
 def title_case(ch):                       # Converts every string type column into title case
     df[ch] = df[ch].apply(str.title)
@@ -37,22 +38,24 @@ def string_checker():                     # converts columns headings present in
             title_case(i)                                            #  if yes calls the title_case function that converts every
                                                                      # string type column into title case
 
-def checkPhoneNumber(phone_number):   #function to check the format of phone numbers
-    for i in df[phone_number]:
-        if(type(i) == str and len(i) == 10):   #if the number is in string format in the dataframe
+def checkPhoneNumber(phone_number):    #function to check phone format
+    new_df = df[phone_number].tolist()
+    for i in new_df:
+        if(type(i) == str and len(i) == 10 and i.isdigit()):    #if the file cell has str type data type then apply these conditions
             pass
-        elif(type(i) == int):
+        elif(type(i) == int):   #if the data type is int check if it has 10 numbers
             cnt = 0
-            while(i):                           #if the number is in integer format in the dataframe
+            while(i):
                 cnt = cnt +1
                 i = i/10
                 i = int(i)
             if(cnt == 10):
                 pass
             else:
-                print("INVALID PHONE NNUMBER  \n",df.index[df[phone_number] == i])  #return if the number is invalid
+                print("INVALID PHONE NUMBER in column index ->",new_df.index(i), "\n") #print the faulty column index corresponding to the phone numbers 
         else:
-            print("INVALID PHONE NNUMBER \n",df.index[df[phone_number] == i])
+            print("INVALID PHONE NUMBER in column index ->",new_df.index(i), "\n")
+            
 
     
 df = df.fillna(value = 'NULL')            # Every NaN value is converted to string type NULL
