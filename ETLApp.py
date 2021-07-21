@@ -72,8 +72,8 @@ def main():
                     with open(abs_file_path, 'r') as config_file:
                         config = json.load(config_file)
                 except:
-                    logger.exception(f"unable to load {rel_path}")
-                    print(f"unable to load {rel_path}")
+                    logger.exception(f"Unable to load {rel_path}")
+                    print(f"Unable to load {rel_path}")
 
                 # applying filters as specified in config file
                 for i in range(config['num_columns']):
@@ -198,6 +198,9 @@ def filterSelect(func_name, column_name):
             checkDateTime(column_name)
         elif (func_name == "checkPhoneNumber"):
             checkPhoneNumber(column_name)
+        else : 
+            logger.info(f"{func_name} does not exist")
+            return 
         logger.info(f"filterSelect finished calling function {func_name}")
     except:
         logger.exception(f"Unable to call function {func_name}")
@@ -216,7 +219,7 @@ def checkNull(column_name):
         indlis = df.index.tolist()
         for i in indlis:
             if pd.isna(df.loc[i,column_name]) == True:
-                logger.info("Line with NaN entry " + f"{i+2}\n" + f"{df.loc[i]}")
+                logger.info(f"Line with NaN entry in column {column_name} at row {i+2} \n  {df.loc[i]}" )
                 df.drop(index = i, inplace = True )
 
         logger.info('Sucessfully removed the rows that had NaN in ' + f"{column_name}")    
@@ -244,8 +247,9 @@ def checkDateTime(column_name):
             
         except:
              #printing and logging in case not able to parse with information about row and element which was faulty
-            print(f"Unable to parse date on {df.loc[i,column_name]} at row {i+2}")
-            logger.exception(f"Not able to parse date on {df.loc[i]} at row {i+2} ")
+            print(f"Unable to parse date in column {column_name} at row {i+2}")
+            logger.exception(f"Not able to parse date in column {column_name} at row {i+2} \n  {df.loc[i]}")
+            
             
             
 def checkProperCase(column_name):
@@ -396,8 +400,7 @@ def checkEmail(column_name):    #function to verify email format
                 if(flga == 1 and flgb == 1):
                     continue
                 else:
-                    logger.info("Invalid email present in this row (details): -> " + f"{i+2}") #print out the faulty column index for the particular email
-                    logger.info('Row Details :-\n ' +f"{df.loc[i]}")
+                    logger.info(f"Invalid email present in column {column_name} at row {i+2} \n  {df.loc[i]}") #print out the faulty column index for the particular email
 
                     
                     
@@ -425,8 +428,7 @@ def checkPhoneNumber(column_name):    #function to check phone format
                 logger.info("Invalid phone number present in this row (details): -> " + f"{i+2}") #print the faulty column index corresponding to the phone numbers 
                 logger.info('Row Details:\n'+f"{df.loc[i]}")
         else:
-            logger.info("Invalid phone number in this row (details): -> " + f"{i+2}")
-            logger.info('Row Details:\n'+f"{df.loc[i]}") 
+            logger.info(f"Invalid phone number in column {column_name} at row {i+2} \n  {df.loc[i]}")
 
 if __name__ == "__main__":
     main()

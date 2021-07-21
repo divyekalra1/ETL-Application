@@ -2,19 +2,19 @@
     "table_name": "demodata1",
     "filetype": ".csv",
     "overwrite": "True",
-    "num_columns": 27,
+    "num_columns": 28,
     "columns": [
         {
             "name": "ID1",
-            "filters": ""
+            "filters": "checkLower" 
         },
         {
             "name": "Project",
-            "filters": "checkNull,checkProperCase,stripSpaces"
+            "filters": "checkProperCase ,checkNull, stripSpaces"
         },
         {
             "name": "ProjectType",
-            "filters": "checkNull,checkProperCase,stripSpaces"
+            "filters": "checkUpper, checkNull , stripSpaces"
         },
         {
             "name": "DevURL",
@@ -30,11 +30,11 @@
         },
         {
             "name": "DevDBUsername",
-            "filters": ""
+            "filters": "checkUpper" 
         },
         {
             "name": "DevDBPassword",
-            "filters": ""
+            "filters": "checkLower" 
         },
         {
             "name": "ValURL",
@@ -94,23 +94,27 @@
         },
         {
             "name": "StartDate",
-            "filters": "checkDateTime"
+            "filters": "checkDateTime , checkNull"
         },
         {
             "name": "EndDate",
-            "filters": "checkDateTime"
+            "filters": "checkDateTime , checkNull"
         },
         {
             "name": "DocURL",
-            "filters": ""
+            "filters": "ch,eck,Upper"
         },
         {
             "name": "Email",
-            "filters": "checkEmail"
+            "filters": "checkEmail , "
         },
         {
             "name": "Phone",
-            "filters": "checkPhoneNumber"
+            "filters": " , checkPhoneNumber"
+        },
+        {
+            "name": "Date",
+            "filters": ""
         }
     ]
 }
