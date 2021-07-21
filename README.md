@@ -13,26 +13,10 @@ source env/bin/activate
 ## Run the extraction python script
 ```sudo python3 extraction.py```
 
-
-Extraction: The data has been downloaded from public platform Kaggle, the file used for extraction was originally formatted as .csv/.xlsx:
-https://www.kaggle.com/mariaren/covid19-healthy-diet-dataset?select=Food_Supply_kcal_Data.csv
-https://www.kaggle.com/varpit94/goldman-sachs-stock-data-updated-till-1jul2021
-
-The .csv file is then read into a Pandas data frame and an SQLAlchemy connection is used along with it to import the data into an sqlite3 database.
-
-Link to the google drive for this project : https://drive.google.com/drive/folders/1Stl16Z5i03GDCxKczD-IjtOqF5IMXsk2?usp=sharing
-
-#date formats supported
-Date
-#char and int:-
-dd mmm yy
-dd mmm yyyy
-mmm dd yy
-mmm dd yyyy
-
-#int only:-
-mm dd yy
-mm dd yyyy
-dd mm yy
-dd mm yyyy
-yyyy mm dd
+The way the application flows or runs is first of all when it is run it checks in a given folder Target_Data if any new or unextracted files are left then extracts it into a pandas dataframe which is kept global so each function can access and modify it with the file formats accepted being .csv, .xls and .xlsx.The Staging folder is to hold the files before putting them in the Target_Data folder. 
+After the data is extracted into a pandas dataframe the ```def createConfig(table_name, filetype)``` function is run creating a json file which contains the list of column with string opposite to it to write the functions to be applied on that column and after creating json file, program asks if json file is ready, once the user has filled the json file he can enter 'y' or 'Y' in the prompt and press enter.
+After this program runs a loop iterating through json file and reading filters to be applied on each column and calling ```filterSelect(str, config['columns'][i]['name'])``` function which is run in another loop iterating through the filters to be applied on the column which calls each filter giving them the column name as the argument.
+Once all filters on all columns are applied the program creates a sqlalchemy engine and creates an sqlite3 database and uses ```df.to_sql(sqlite_table, sqlite_connection, index_label='id',if_exists=db_action_mode)``` to transfer the data in pandas dataframe to the sqlite3 table. 
+Then, the next file can be put into the Target_Data folder for ETL.
+Throughout the program print and logging statements are present showing the progress of application and errors occuring.
+To handle the errors and not letting them stop the flow of application we have used try and except statements in every place where there is a scope of error and used ```logging.exception()``` in the except statement to log the traceback of error so the technical staff can trace the error later on
