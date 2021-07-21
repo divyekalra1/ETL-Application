@@ -11,9 +11,9 @@ import keyboard
 import os
 import json
 import logging
-import dt as DATETIME
+import datetime 
 import re   
-
+import dateutil.parser
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 ''' 
     A pandas dataframe is used to import data from a csv file to an sqlite3 database file present in the same directory
@@ -86,7 +86,7 @@ def main():
                                 logger.info(f"{str} filter applied to column \"{config['columns'][i]['name']}\"")
                             else :
                                 logger.info(f"No filter applied to column \"{config['columns'][i]['name']}\"")
-                        except:
+                        except Exception:
                             logger.exception(f"{str} filter FAILED to apply to column \"{config['columns'][i]['name']}\"")
 
                 db_action_mode = 'append'
@@ -197,8 +197,7 @@ def filterSelect(func_name, column_name):
             checkDateTime(column_name)
         elif (func_name == "checkPhoneNumber"):
             checkPhoneNumber(column_name)
-
-        logger.info(f"selectFilter finished calling function {func_name}")
+        logger.info(f"filterSelect finished calling function {func_name}")
     except:
         logger.exception(f"Unable to call function {func_name}")
 
@@ -207,55 +206,40 @@ def filterSelect(func_name, column_name):
 def checkNull(column_name):                  
     # INPUT WILL BE FROM CONFIG FILE
     try:
+        
         '''
          This list contains a series of boolean values if the datavalue is NaN it will have True in its corresponding 'i'th 
          position or it wll have False in its corresponding 'i'th position
         '''
-        li = df[column_name].isnull().tolist() 
-        num = 0 
-        lis=[]
-        '''empty list which will contain the idices of all the rows which have NaN values '''
-        rows = df.shape[0]
-        for i in li:
-            if i == True:
-                lis.append(num)
-                logger.info("Error on line " + f"{num+1}\n" + f"{df.iloc[num]}")
-            num = num + 1
-        print('indices found with null values', lis)
-        lis.reverse()
-        ''' reverses the list'''
+        
+        indlis = df.index.tolist()
+        for i in indlis:
+            if pd.isna(df.loc[i,column_name]) == True:
+                logger.info("Error on line " + f"{i+2}\n" + f"{df.loc[i]}")
+                df.drop(index = i, inplace = True )
 
-        for j in lis:
-            df.drop(index = j, inplace = True)
         logger.info('Sucessfully removed the rows that had NaN in ' + f"{column_name}")    
-
     except:
+        
         '''
         if the column name provided is not the column heading then this part of code will be executed. It will be logged
         in a seperate logging file
         '''
-        print('Column heading specified not present in table')  
-        logger.exception(f'Column name "{column_name}" specified not present in table') 
-        # LOG THIS INTO .LOG FIlE INSTEAD OF PRINTING
-
+        
+        logger.exception('Column heading specified not present in the table')
 
 def checkDateTime(column_name):
-    listi = df[column_name].tolist()    
-    listr = []
-    dt = ""
-    dd = ""
-    i=0
-    for row in listi:
-        dt,dd = DATETIME.ddt(row)
-        i = i + 1
-        if dt=="":
-            print("Loop ", i)
-            listr.append(DATETIME.ddf(dd, listi))
-        else:
-            pass #Time function to be added 
-        #error printed in function the string is errored
-    # for row in listr:
-         
+    i2='' #to store i converted to string format
+    indlis = df.index.tolist()
+    for i in indlis: #looping throughout the column
+        try:
+            i2=str(df.loc[i,column_name])
+            date_corrected= dateutil.parser.parse(df.loc[i,column_name]) #guessing format and parsing string to datetime format
+            df.replace(to_replace =df.loc[i,column_name],value =date_corrected) #replacing string with datetime object
+        except:
+             #printing and logging in case not able to parse with information about row and element which was faulty
+            print(f"Unable to parse date on {df.loc[i,column_name]} at row {i+2}")
+            logger.exception(f"Not able to parse date on {df.loc[i]} at row {i+2} ")
 def checkProperCase(column_name):
     '''
     So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
@@ -285,7 +269,7 @@ def checkProperCase(column_name):
         in a seperate logging file
         '''
         
-        logger.info(f'Column name "{column_name}" specified not present in table')
+        logger.exception(f'Column name "{column_name}" specified not present in table')
 
              
 def checkUpper(column_name):
@@ -317,7 +301,7 @@ def checkUpper(column_name):
         if the argument provided is not the column heading then this part of code will be executed. It will be logged
         in a seperate logging file
         '''
-        logger.info(f'Column name "{column_name}" specified not present in table')
+        logger.exception(f'Column name "{column_name}" specified not present in table')
 
         
 def stripSpaces(column_name):
@@ -350,7 +334,7 @@ def stripSpaces(column_name):
         in a seperate logging file
         '''
         
-        logger.info(f'Column name "{column_name}" specified not present in table')
+        logger.exception(f'Column name "{column_name}" specified not present in table')
         
 def checkLower(column_name):
     '''
@@ -381,42 +365,51 @@ def checkLower(column_name):
         in a seperate logging file
         '''
         
-        logger.info(f'Column name "{column_name}" specified not present in table')
+        logger.exception(f'Column name "{column_name}" specified not present in table')
 
-def checkEmail(Email):    #function to verify email format
-    new_email = df[Email].tolist()     # iterate through the list and check with regular expressions
-    for i in new_email:
-        if(re.search(regex,i)):   
+def checkEmail(column_name):    #function to verify email format
+#      new_email = df[column_name].tolist() # iterate through the list and check with regular expressions
+#     count = 1
+    indlis = df.index.tolist()
+    for i in indlis:
+#         count = count +1
+        if type(df.loc[i,column_name]) == str:
+            if(re.search(regex,df.loc[i,column_name])):   
                 continue  
-        else:
-            flga = 0
-            flgb = 0
-            for j in new_email[new_email.index(i)]:         #if regex does not match then just check for '@' and '.'
-                if(j == '@'):
-                    flga =1
-                if(j == '.' and flga == 1):
-                    flgb = 1
-            if(flga == 1 and flgb == 1):
-                continue
             else:
-                logger.info("Invalid email present in this row (details): -> " + f"{df.loc[new_email.index(i)]}")     #print out the faulty column index for the particular email
+                flga = 0
+                flgb = 0
+                for j in df.loc[i,column_name]:         #if regex does not match then just check for '@' and '.'
+                    if(j == '@'):
+                        flga =1
+                    if(j == '.' and flga == 1):
+                        flgb = 1
+                if(flga == 1 and flgb == 1):
+                    continue
+                else:
+                    logger.info("Invalid email present in this row (details): -> " + f"{i+2}") #print out the faulty column index for the particular email
+                    logger.info('Row Details :-\n ' +f"{df.loc[i]}")
                 
-                
-                
-def checkPhoneNumber(phone_number):    #function to check phone format
-    new_df = df[phone_number].tolist()
-    for i in new_df:
-        if(type(i) == str and len(i) == 10 and i.isdigit()):    #if the file cell has str type data type then apply these conditions
+def checkPhoneNumber(column_name):    #function to check phone format
+    indlis = df.index.tolist()
+    for i in indlis:
+        cell = df.loc[i,column_name]
+        if(type(cell) == str and len(cell) == 10 and cell.isdigit()):    #if the file cell has str type data type then apply these conditions
             pass
-        elif(type(i) == int):   #if the data type is int check if it has 10 numbers
+        elif(type(cell) == int):   #if the data type is int check if it has 10 numbers
             cnt = 0
-            while(i):
+            while(cell):
                 cnt = cnt +1
-                i = i/10
-                i = int(i)
+                cell = cell/10
+                cell = int(cell)
             if(cnt == 10):
                 pass
             else:
-                logger.info("Invalid phone number present in this row (details): -> " + f"{df.loc[new_df.index(i)]}") #print the faulty column index corresponding to the phone numbers 
+                logger.info("Invalid phone number present in this row (details): -> " + f"{i+2}") #print the faulty column index corresponding to the phone numbers 
+                logger.info('Row Details:\n'+f"{df.loc[i]}")
         else:
-            logger.info("Invalid phone number in this row (details): -> " + f"{df.loc[new_df.index(i)]}")                
+            logger.info("Invalid phone number in this row (details): -> " + f"{i+2}")
+            logger.info('Row Details:\n'+f"{df.loc[i]}") 
+
+if __name__ == "__main__":
+    main()

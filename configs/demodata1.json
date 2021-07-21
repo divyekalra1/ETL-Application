@@ -1,0 +1,116 @@
+{
+    "table_name": "demodata1",
+    "filetype": ".csv",
+    "overwrite": "True",
+    "num_columns": 27,
+    "columns": [
+        {
+            "name": "ID1",
+            "filters": ""
+        },
+        {
+            "name": "Project",
+            "filters": "checkNull,checkProperCase,stripSpaces"
+        },
+        {
+            "name": "ProjectType",
+            "filters": "checkNull,checkProperCase,stripSpaces"
+        },
+        {
+            "name": "DevURL",
+            "filters": ""
+        },
+        {
+            "name": "DevUserName",
+            "filters": ""
+        },
+        {
+            "name": "DevDBName",
+            "filters": ""
+        },
+        {
+            "name": "DevDBUsername",
+            "filters": ""
+        },
+        {
+            "name": "DevDBPassword",
+            "filters": ""
+        },
+        {
+            "name": "ValURL",
+            "filters": ""
+        },
+        {
+            "name": "ValUserName",
+            "filters": ""
+        },
+        {
+            "name": "ValPass",
+            "filters": ""
+        },
+        {
+            "name": "ValDBName",
+            "filters": ""
+        },
+        {
+            "name": "ValDBUsername",
+            "filters": ""
+        },
+        {
+            "name": "ValDBPassword",
+            "filters": ""
+        },
+        {
+            "name": "ProdURL",
+            "filters": ""
+        },
+        {
+            "name": "ProdUsername",
+            "filters": ""
+        },
+        {
+            "name": "ProdPass",
+            "filters": ""
+        },
+        {
+            "name": "ProdDB",
+            "filters": ""
+        },
+        {
+            "name": "ProdDBPassword",
+            "filters": ""
+        },
+        {
+            "name": "GitLabRepo",
+            "filters": ""
+        },
+        {
+            "name": "GitHubRepo",
+            "filters": ""
+        },
+        {
+            "name": "ProjectOwner",
+            "filters": ""
+        },
+        {
+            "name": "StartDate",
+            "filters": "checkDateTime"
+        },
+        {
+            "name": "EndDate",
+            "filters": "checkDateTime"
+        },
+        {
+            "name": "DocURL",
+            "filters": ""
+        },
+        {
+            "name": "Email",
+            "filters": "checkEmail"
+        },
+        {
+            "name": "Phone",
+            "filters": "checkPhoneNumber"
+        }
+    ]
+}
