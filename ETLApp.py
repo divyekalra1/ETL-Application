@@ -95,6 +95,7 @@ def main():
                     check = engine.has_table(sqlite_table)
                     if config["overwrite"].lower == "true":
                         db_action_mode = 'replace'
+                    # if the "overwrite" field is set to "true" (case insensitive) then the existing sqlite3 database will be completely overwritten with data from the dataframe
                     df.to_sql(sqlite_table, sqlite_connection, index_label='id', if_exists=db_action_mode) # Exporting the validated data to an SQL table
                     logger.info(f"Table {sqlite_table} created")
                 except ValueError as ve: # Raise ValueError if table already exists
@@ -138,7 +139,7 @@ def createConfig(table_name, filetype):
     # storing information about the database
     config['table_name'] = table_name
     config["filetype"] = filetype
-    config["overwrite"] = "False"
+    config["overwrite"] = "False"       # According to this string, the existing database will be overwitten or appended to durng loading  (default: append)
     config['num_columns'] = len(df.columns)
     # Storing column names as list of dictionaries
     config['columns'] = []
