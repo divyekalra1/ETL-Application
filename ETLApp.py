@@ -209,14 +209,14 @@ def checkNull(column_name):
     try:
         
         '''
-         This list contains a series of boolean values if the datavalue is NaN it will have True in its corresponding 'i'th 
-         position or it wll have False in its corresponding 'i'th position
+         This list contains a series of index. Index is unique to each and every row and we will be using the below defined list to iterate trough it 
+         and with the help of this, making some changes on the dataframe.
         '''
         
         indlis = df.index.tolist()
         for i in indlis:
             if pd.isna(df.loc[i,column_name]) == True:
-                logger.info("Error on line " + f"{i+2}\n" + f"{df.loc[i]}")
+                logger.info("Line with NaN entry " + f"{i+2}\n" + f"{df.loc[i]}")
                 df.drop(index = i, inplace = True )
 
         logger.info('Sucessfully removed the rows that had NaN in ' + f"{column_name}")    
@@ -229,18 +229,25 @@ def checkNull(column_name):
         
         logger.exception('Column heading specified not present in the table')
 
+        
 def checkDateTime(column_name):
+    
     i2='' #to store i converted to string format
     indlis = df.index.tolist()
+    
     for i in indlis: #looping throughout the column
+        
         try:
             i2=str(df.loc[i,column_name])
             date_corrected= dateutil.parser.parse(df.loc[i,column_name]) #guessing format and parsing string to datetime format
             df.replace(to_replace =df.loc[i,column_name],value =date_corrected) #replacing string with datetime object
+            
         except:
              #printing and logging in case not able to parse with information about row and element which was faulty
             print(f"Unable to parse date on {df.loc[i,column_name]} at row {i+2}")
             logger.exception(f"Not able to parse date on {df.loc[i]} at row {i+2} ")
+            
+            
 def checkProperCase(column_name):
     '''
     So if the argumnet provided to the function is a vaild column name in the dataframe then the flow of code will go thorugh
@@ -369,11 +376,12 @@ def checkLower(column_name):
         logger.exception(f'Column name "{column_name}" specified not present in table')
 
 def checkEmail(column_name):    #function to verify email format
-#      new_email = df[column_name].tolist() # iterate through the list and check with regular expressions
-#     count = 1
+    '''
+         This list contains a series of index. Index is unique to each and every row and we will be using the below defined list to iterate trough it 
+         and with the help of this, making some changes on the dataframe.
+     '''
     indlis = df.index.tolist()
     for i in indlis:
-#         count = count +1
         if type(df.loc[i,column_name]) == str:
             if(re.search(regex,df.loc[i,column_name])):   
                 continue  
@@ -390,8 +398,16 @@ def checkEmail(column_name):    #function to verify email format
                 else:
                     logger.info("Invalid email present in this row (details): -> " + f"{i+2}") #print out the faulty column index for the particular email
                     logger.info('Row Details :-\n ' +f"{df.loc[i]}")
-                
+
+                    
+                    
 def checkPhoneNumber(column_name):    #function to check phone format
+    
+    '''
+         This list contains a series of index. Index is unique to each and every row and we will be using the below defined list to iterate trough it 
+         and with the help of this, making some changes on the dataframe.
+    '''
+    
     indlis = df.index.tolist()
     for i in indlis:
         cell = df.loc[i,column_name]
