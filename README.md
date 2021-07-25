@@ -1,5 +1,5 @@
 # ETL-Application
-A console based ETL Application developed for Erasmith Technologies Pvt. Ltd. 
+A console based ETL Application designed and developed for Erasmith Technologies Pvt. Ltd. 
 
 ## Create and activate a python3 virtual enviroment
 ```
