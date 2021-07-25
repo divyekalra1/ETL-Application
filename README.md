@@ -13,6 +13,7 @@ source env/bin/activate
 ## Run the extraction python script
 ```sudo python3 extraction.py```
 
+## Flow of the App
 The way the application flows or runs is first of all when it is run it checks in a given folder Target_Data if any new or unextracted files are left then extracts it into a pandas dataframe which is kept global so each function can access and modify it with the file formats accepted being .csv, .xls and .xlsx.The Staging folder is to hold the files before putting them in the Target_Data folder. 
 After the data is extracted into a pandas dataframe the ```def createConfig(table_name, filetype)``` function is run creating a json file which contains the list of column with string opposite to it to write the functions to be applied on that column and after creating json file, program asks if json file is ready, once the user has filled the json file he can enter 'y' or 'Y' in the prompt and press enter.
 After this program runs a loop iterating through json file and reading filters to be applied on each column and calling ```filterSelect(str, config['columns'][i]['name'])``` function which is run in another loop iterating through the filters to be applied on the column which calls each filter giving them the column name as the argument.
